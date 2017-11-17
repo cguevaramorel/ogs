@@ -21,34 +21,10 @@
 #include "BaseLib/excludeObjectCopy.h"
 #include "Location.h"
 
+#include "PropertyVectorBase.h"
+
 namespace MeshLib
 {
-class PropertyVectorBase
-{
-public:
-    virtual PropertyVectorBase* clone(
-        std::vector<std::size_t> const& exclude_positions
-    ) const = 0;
-    virtual ~PropertyVectorBase() = default;
-
-    MeshItemType getMeshItemType() const { return _mesh_item_type; }
-    std::string const& getPropertyName() const { return _property_name; }
-    int getNumberOfComponents() const { return _n_components; }
-
-protected:
-    PropertyVectorBase(std::string property_name,
-                       MeshItemType mesh_item_type,
-                       std::size_t n_components)
-        : _n_components(n_components),
-          _mesh_item_type(mesh_item_type),
-          _property_name(std::move(property_name))
-    {}
-
-    int const _n_components;
-    MeshItemType const _mesh_item_type;
-    std::string const _property_name;
-};
-
 /// Class template PropertyVector is a std::vector with template parameter
 /// PROP_VAL_TYPE. The reason for the derivation of std::vector is
 /// the template specialisation for pointer types below.
