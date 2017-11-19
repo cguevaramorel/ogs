@@ -11,7 +11,6 @@
 
 #include "SmallDeformationLocalAssemblerMatrix.h"
 
-#include <valarray>
 #include <vector>
 
 #include <Eigen/Eigen>

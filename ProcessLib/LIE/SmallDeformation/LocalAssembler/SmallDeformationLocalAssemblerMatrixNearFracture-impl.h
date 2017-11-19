@@ -11,7 +11,6 @@
 
 #include "SmallDeformationLocalAssemblerMatrixNearFracture.h"
 
-#include <valarray>
 #include <vector>
 
 #include <Eigen/Eigen>
