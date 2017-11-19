@@ -24,12 +24,11 @@ namespace BaseLib
 /// @param exclude_positions the positions of objects in the source vector that
 /// do not have to be copied
 /// @return vector that contains the copied objects
-template <typename T>
-std::vector<T> excludeObjectCopy(std::vector<T> const& src_vec,
-    std::vector<std::size_t> const& exclude_positions)
+template <typename Container>
+Container excludeObjectCopy(Container const& src_vec,
+                            std::vector<std::size_t> const& exclude_positions)
 {
-    std::vector<T> dest_vec;
-    if (exclude_positions.empty()) {
+    Container dest_vec;
         dest_vec = src_vec;
         return dest_vec;
     }
@@ -50,10 +49,10 @@ std::vector<T> excludeObjectCopy(std::vector<T> const& src_vec,
     return dest_vec;
 }
 
-template <typename T>
-void excludeObjectCopy(std::vector<T> const& src_vec,
-    std::vector<std::size_t> const& exclude_positions,
-    std::vector<T> & dest_vec)
+template <typename Container>
+void excludeObjectCopy(Container const& src_vec,
+                       std::vector<std::size_t> const& exclude_positions,
+                       Container& dest_vec)
 {
     dest_vec = excludeObjectCopy(src_vec, exclude_positions);
 }
