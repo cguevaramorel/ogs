@@ -64,16 +64,20 @@ Properties Properties::excludeCopyProperties(
     {
         if (name_vector_pair.second->getMeshItemType() == MeshItemType::Cell)
         {
+            /* TODO (naumov) reenable clone with excludes.
             exclude_copy._properties.insert(std::make_pair(
                 name_vector_pair.first,
                 name_vector_pair.second->clone(exclude_elem_ids)));
+            */
         }
         else if (name_vector_pair.second->getMeshItemType() ==
                  MeshItemType::Node)
         {
+            /* TODO (naumov) reenable clone with excludes.
             exclude_copy._properties.insert(std::make_pair(
                 name_vector_pair.first,
                 name_vector_pair.second->clone(exclude_node_ids)));
+            */
         }
     }
     return exclude_copy;
@@ -91,10 +95,12 @@ Properties Properties::excludeCopyProperties(
             exclude_mesh_item_types.end())
             continue;
 
+        /* TODO (naumov) add back simple clone
         std::vector<std::size_t> const exclude_positions{};
         new_properties._properties.insert(
             std::make_pair(name_vector_pair.first,
                            name_vector_pair.second->clone(exclude_positions)));
+        */
     }
     return new_properties;
 }
@@ -102,6 +108,7 @@ Properties Properties::excludeCopyProperties(
 Properties::Properties(Properties const& properties)
     : _properties(properties._properties)
 {
+        /* TODO (naumov) add back simple clone
     std::vector<std::size_t> exclude_positions;
     for (auto& name_vector_pair : _properties)
     {
@@ -109,6 +116,7 @@ Properties::Properties(Properties const& properties)
             name_vector_pair.second->clone(exclude_positions));
         name_vector_pair.second = t;
     }
+    */
 }
 
 Properties::~Properties()

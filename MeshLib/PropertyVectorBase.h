@@ -19,8 +19,10 @@ namespace MeshLib
 class PropertyVectorBase
 {
 public:
+    /*
     virtual PropertyVectorBase* clone(
         std::vector<std::size_t> const& exclude_positions) const = 0;
+        */
     virtual ~PropertyVectorBase() = default;
 
     MeshItemType getMeshItemType() const { return _mesh_item_type; }
