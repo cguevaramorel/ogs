@@ -100,7 +100,8 @@ public:
     }
 
     /// Copy vector values.
-    void copyValues(std::vector<double>& u) const
+    template <typename Container>
+    void copyValues(Container& u) const
     {
         assert(u.size() == (std::size_t) _vec.size());
         copy_n(_vec.data(), _vec.size(), u.begin());
