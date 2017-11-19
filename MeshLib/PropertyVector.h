@@ -30,36 +30,39 @@ namespace MeshLib
 /// the template specialisation for pointer types below.
 /// \tparam PROP_VAL_TYPE typical this is a scalar, a vector or a matrix
 template <typename PROP_VAL_TYPE>
-class PropertyVector : public std::vector<PROP_VAL_TYPE>,
-    public PropertyVectorBase
+class PropertyVector final : public PropertyVectorBase
 {
-friend class Properties;
+    friend class Properties;
 
 public:
-    std::size_t getNumberOfTuples() const
-    {
-        return std::vector<PROP_VAL_TYPE>::size() / _n_components;
-    }
+    using value_type = PROP_VAL_TYPE;
+    using iterator = typename std::vector<value_type>::iterator;
+    using const_iterator = typename std::vector<value_type>::const_iterator;
+
+public:
+    PropertyVector(PropertyVector const& other) {}
+
+    std::size_t getNumberOfTuples() const { return size() / _n_components; }
 
     //! Returns the value for the given component stored in the given tuple.
-    PROP_VAL_TYPE& getComponent(std::size_t tuple_index, int component)
+    PROP_VAL_TYPE& getComponent(std::size_t const tuple_index,
+                                int const component)
     {
         assert(component < _n_components);
         assert(tuple_index < getNumberOfTuples());
-        return this->operator[](tuple_index* getNumberOfComponents() +
-                                component);
+        return _values[tuple_index * getNumberOfComponents() + component];
     }
 
     //! Returns the value for the given component stored in the given tuple.
-    PROP_VAL_TYPE const& getComponent(std::size_t tuple_index,
+    PROP_VAL_TYPE const& getComponent(std::size_t const tuple_index,
                                       int component) const
     {
         assert(component < _n_components);
         assert(tuple_index < getNumberOfTuples());
-        return this->operator[](tuple_index* getNumberOfComponents() +
-                                component);
+        return _values[tuple_index * getNumberOfComponents() + component];
     }
 
+    /*
     PropertyVectorBase* clone(
         std::vector<std::size_t> const& exclude_positions) const override
     {
@@ -68,12 +71,51 @@ public:
         BaseLib::excludeObjectCopy(*this, exclude_positions, *t);
         return t;
     }
+    */
+
+    PROP_VAL_TYPE const& operator[](std::size_t const index) const
+    {
+        return _values[index];
+    }
+
+    PROP_VAL_TYPE& operator[](std::size_t const index) { return _values[index]; }
 
     /// Method returns the number of tuples times the number of tuple components.
-    std::size_t size() const
+    std::size_t size() const { return _values.size(); }
+
+    bool empty() const { return _values.empty(); }
+
+    auto cbegin() const { return _values.cbegin(); }
+    auto cend() const { return _values.cend(); }
+    auto begin() const { return _values.begin(); }
+    auto end() const { return _values.end(); }
+    auto begin() { return _values.begin(); }
+    auto end() { return _values.end(); }
+    iterator insert(const_iterator pos, value_type const& value)
     {
-        return std::vector<PROP_VAL_TYPE>::size();
+        return _values.insert(pos, value);
     }
+    iterator insert(const_iterator pos, std::size_t count,
+                    value_type const& value)
+    {
+        return _values.insert(pos, count, value);
+    }
+    template <typename InputIt>
+    iterator insert(const_iterator pos, InputIt first, InputIt last)
+    {
+        return _values.insert(pos, first, last);
+    }
+    void reserve(std::size_t const count) { _values.reserve(count); }
+    void resize(std::size_t const count) { _values.resize(count); }
+    void resize(std::size_t const count, value_type const& value)
+    {
+        _values.resize(count, value);
+    }
+
+    void push_back(PROP_VAL_TYPE const& value) { _values.push_back(value); }
+    void push_back(PROP_VAL_TYPE&& value) { _values.push_back(std::move(value)); }
+
+    auto data() { return _values.data(); }
 
 protected:
     /// @brief The constructor taking meta information for the data.
@@ -84,8 +126,7 @@ protected:
     explicit PropertyVector(std::string const& property_name,
                             MeshItemType mesh_item_type,
                             std::size_t n_components)
-        : std::vector<PROP_VAL_TYPE>(),
-          PropertyVectorBase(property_name, mesh_item_type, n_components)
+        : PropertyVectorBase(property_name, mesh_item_type, n_components)
     {}
 
     /// @brief The constructor taking meta information for the data.
@@ -99,9 +140,12 @@ protected:
                    std::string const& property_name,
                    MeshItemType mesh_item_type,
                    std::size_t n_components)
-        : std::vector<PROP_VAL_TYPE>(n_property_values * n_components),
+        : _values(n_property_values * n_components),
           PropertyVectorBase(property_name, mesh_item_type, n_components)
     {}
+
+private:
+    std::vector<PROP_VAL_TYPE> _values;
 };
 
 /// Class template PropertyVector is a std::vector with template parameter
@@ -114,8 +158,7 @@ protected:
 /// \tparam T pointer type, the type the type points to is typical a scalar,
 /// a vector or a matrix type
 template <typename T>
-class PropertyVector<T*> : public std::vector<std::size_t>,
-    public PropertyVectorBase
+class PropertyVector<T*> final : public PropertyVectorBase
 {
 friend class Properties;
 public:
@@ -128,15 +171,12 @@ public:
 
     /// The operator[] uses the item to group property map to access to the
     /// correct property value/object.
-    T* const& operator[](std::size_t id) const
+    T* const& operator[](std::size_t const id) const
     {
-        return _values[std::vector<std::size_t>::operator[](id)];
+        return _values[_pointers[id]];
     }
 
-    T* & operator[](std::size_t id)
-    {
-        return _values[std::vector<std::size_t>::operator[](id)];
-    }
+    T*& operator[](std::size_t const id) { return _values[_pointers[id]]; }
 
     void initPropertyValue(std::size_t group_id, T const& value)
     {
@@ -160,17 +200,12 @@ public:
         _values[group_id] = p;
     }
 
-    std::size_t getNumberOfTuples() const
-    {
-        return std::vector<std::size_t>::size();
-    }
+    std::size_t getNumberOfTuples() const { return _pointers.size(); }
 
     /// Method returns the number of tuples times the number of tuple components.
-    std::size_t size() const
-    {
-        return _n_components * std::vector<std::size_t>::size();
-    }
+    std::size_t size() const { return _n_components * _pointers.size(); }
 
+    /*
     PropertyVectorBase* clone(
         std::vector<std::size_t> const& exclude_positions) const override
     {
@@ -189,13 +224,14 @@ public:
         }
         return t;
     }
+    */
 
     //! Returns the value for the given component stored in the given tuple.
     T const& getComponent(std::size_t tuple_index, int component) const
     {
         assert(component < _n_components);
         assert(tuple_index < getNumberOfTuples());
-        const double* p = this->operator[](tuple_index);
+        const double* p = _pointers[tuple_index];
         if (p == nullptr)
             OGS_FATAL("No data found in the property vector %s "
                       "for the tuple index %d and component %d",
@@ -208,7 +244,7 @@ public:
     {
         os << "\nPropertyVector<T*> at address: " << this << ":\n";
         os << "\tmapping (" << size() <<"):\n";
-        std::copy(this->cbegin(), this->cend(),
+        std::copy(_pointers.cbegin(), _pointers.cend(),
             std::ostream_iterator<std::size_t>(os, " "));
         os << "\n\tvalues (" << _values.size() << "):\n";
         for (std::size_t k(0); k < _values.size(); k++)
@@ -237,15 +273,14 @@ protected:
                    std::string const& property_name,
                    MeshItemType mesh_item_type,
                    std::size_t n_components)
-        : std::vector<std::size_t>(std::move(item2group_mapping)),
+        : _pointers(std::move(item2group_mapping)),
           PropertyVectorBase(property_name, mesh_item_type, n_components),
           _values(n_prop_groups * n_components)
     {}
 
 private:
     std::vector<T*> _values;
-    // hide method
-    T* at(std::size_t);
+    std::vector<std::size_t> _pointers;
 };
 
 } // end namespace MeshLib
