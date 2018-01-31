@@ -338,6 +338,7 @@ void PhaseFieldProcess<DisplacementDim>::preTimestepConcreteProcess(
 
     _process_data.dt = dt;
     _process_data.t = t;
+    _process_data.injected_volume = _process_data.t;
 
     GlobalExecutor::executeMemberOnDereferenced(
         &LocalAssemblerInterface::preTimestep, _local_assemblers,
@@ -359,10 +360,10 @@ template <int DisplacementDim>
 void PhaseFieldProcess<DisplacementDim>::postNonLinearSolverConcreteProcess(
     GlobalVector const& x, const double t, const int process_id)
 {
-    if (isPhaseFieldProcess(process_id))
-    {
-        double integral = 0;
+    _process_data.crack_volume = 0.0;
 
+    if (!isPhaseFieldProcess(process_id))
+    {
         std::vector<std::reference_wrapper<NumLib::LocalToGlobalIndexMap>>
             dof_tables;
 
@@ -373,10 +374,34 @@ void PhaseFieldProcess<DisplacementDim>::postNonLinearSolverConcreteProcess(
 
         GlobalExecutor::executeMemberOnDereferenced(
             &LocalAssemblerInterface::computeCrackIntegral, _local_assemblers,
-            dof_tables, x, t, integral, _use_monolithic_scheme,
-            _coupled_solutions);
+            dof_tables, x, t, _process_data.crack_volume,
+            _use_monolithic_scheme, _coupled_solutions);
 
-        INFO("Integral of crack: %g", integral);
+        INFO("Integral of crack: %g", _process_data.crack_volume);
+
+        if (_process_data.propagating_crack)
+        {
+            _process_data.pressure_old = _process_data.pressure;
+            _process_data.pressure =
+                _process_data.injected_volume / _process_data.crack_volume;
+            _process_data.pressure_error =
+                abs(_process_data.pressure_old - _process_data.pressure) /
+                _process_data.pressure;
+            INFO("Internal pressure: %g and Pressure error: %.4e",
+                 _process_data.pressure, _process_data.pressure_error);
+            auto& u = _coupled_solutions->coupled_xs[0].get();
+            MathLib::LinAlg::scale(const_cast<GlobalVector&>(u),
+                                   _process_data.pressure);
+        }
+    }
+    else
+    {
+        if (_process_data.propagating_crack)
+        {
+            auto& u = _coupled_solutions->coupled_xs[0].get();
+            MathLib::LinAlg::scale(const_cast<GlobalVector&>(u),
+                                   1 / _process_data.pressure);
+        }
     }
 }
 }  // namespace PhaseField
