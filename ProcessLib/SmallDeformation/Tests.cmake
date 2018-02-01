@@ -11,6 +11,17 @@ AddTest(
     square_1e0_expected_pcs_0_ts_4_t_1.000000.vtu square_1e0_pcs_0_ts_4_t_1.000000.vtu sigma sigma 1e-16 1e-16
 )
 AddTest(
+    NAME Mechanics_SDL_square_1e0_displacementBC_petsc
+    PATH Mechanics/Linear
+    EXECUTABLE ogs
+    EXECUTABLE_ARGS square_1e0_petsc.prj
+    TESTER vtkdiff
+    REQUIREMENTS OGS_USE_MPI
+    DIFF_DATA
+    square_1e0_expected_pcs_0_ts_4_t_1.000000.vtu square_1e0_pcs_0_ts_4_t_1_000000_0.vtu displacement displacement 1e-16 1e-16
+    #square_1e0_expected_pcs_0_ts_4_t_1.000000.vtu square_1e0_pcs_0_ts_4_t_1_000000_0.vtu sigma sigma 1e-16 1e-16
+)
+AddTest(
     NAME Mechanics_SDL_square_1e2_tractionBC
     PATH Mechanics/Linear
     EXECUTABLE ogs
