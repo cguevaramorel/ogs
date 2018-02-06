@@ -191,10 +191,20 @@ std::unique_ptr<Process> createPhaseFieldProcess(
         std::copy_n(b.data(), b.size(), specific_body_force.data());
     }
 
+    auto const crack_scheme =
+        //! \ogs_file_param{prj__processes__process__PHASE_FIELD__crack_scheme}
+        config.getConfigParameterOptional<std::string>("hydro_crack_scheme");
+    const bool propagating_crack =
+        (crack_scheme && (*crack_scheme == "propagating"));
+    const bool crack_pressure =
+        (crack_scheme &&
+         ((*crack_scheme == "propagating") || (*crack_scheme == "static")));
+
     PhaseFieldProcessData<DisplacementDim> process_data{
         std::move(material), residual_stiffness,  crack_resistance,
         crack_length_scale,  kinetic_coefficient, solid_density,
-        history_field,       specific_body_force};
+        history_field,       specific_body_force, propagating_crack,
+        crack_pressure};
 
     SecondaryVariableCollection secondary_variables;
 
