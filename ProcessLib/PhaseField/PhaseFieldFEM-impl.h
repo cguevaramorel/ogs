@@ -450,6 +450,7 @@ void PhaseFieldLocalAssembler<ShapeFunction, IntegrationMethod,
                          bool const /*use_monolithic_scheme*/,
                          CoupledSolutionsForStaggeredScheme const* const cpl_xs)
 {
+    // TODO (keita) Needs to handle the monolithic scheme in case cpl_xs is null
     assert(cpl_xs != nullptr);
 
     std::vector<std::vector<GlobalIndexType>> indices_of_processes;
