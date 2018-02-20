@@ -88,7 +88,6 @@ bool PETScNonlinearSolver::solve(
 
         DBUG("PETScNonlinearSolver: residual callback called.");
 
-        // TODO Maybe need to overwrite the ogs x with petsc_x.
         /*
         DBUG("BEFORE ASSEMBLY")
         DBUG("The ogs-x vector.")
