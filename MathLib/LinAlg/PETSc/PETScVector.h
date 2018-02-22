@@ -22,6 +22,8 @@
 
 #include <petscvec.h>
 
+#include "BaseLib/Error.h"
+
 namespace MathLib
 {
 /*!
@@ -96,7 +98,11 @@ public:
     */
     void set(const PetscInt i, const PetscScalar value)
     {
-        VecSetValue(_v, i, value, INSERT_VALUES);
+        auto const ierr = VecSetValue(_v, i, value, INSERT_VALUES);
+        if (ierr)
+        {
+            OGS_FATAL("PETSc ERROR %d", ierr);
+        };
     }
 
     /*!
@@ -106,7 +112,11 @@ public:
     */
     void add(const PetscInt i, const PetscScalar value)
     {
-        VecSetValue(_v, i, value, ADD_VALUES);
+        auto const ierr = VecSetValue(_v, i, value, ADD_VALUES);
+        if (ierr)
+        {
+            OGS_FATAL("PETSc ERROR %d", ierr);
+        };
     }
 
     /*!
@@ -119,7 +129,12 @@ public:
     template <class T_SUBVEC>
     void add(const std::vector<PetscInt>& e_idxs, const T_SUBVEC& sub_vec)
     {
-        VecSetValues(_v, e_idxs.size(), &e_idxs[0], &sub_vec[0], ADD_VALUES);
+        auto const ierr = VecSetValues(_v, e_idxs.size(), &e_idxs[0],
+                                       &sub_vec[0], ADD_VALUES);
+        if (ierr)
+        {
+            OGS_FATAL("PETSc ERROR %d", ierr);
+        };
     }
 
     /*!
@@ -132,11 +147,23 @@ public:
     template <class T_SUBVEC>
     void set(const std::vector<PetscInt>& e_idxs, const T_SUBVEC& sub_vec)
     {
-        VecSetValues(_v, e_idxs.size(), &e_idxs[0], &sub_vec[0], INSERT_VALUES);
+        auto const ierr = VecSetValues(_v, e_idxs.size(), &e_idxs[0],
+                                       &sub_vec[0], INSERT_VALUES);
+        if (ierr)
+        {
+            OGS_FATAL("PETSc ERROR %d", ierr);
+        };
     }
 
     // TODO preliminary
-    void setZero() { VecSet(_v, 0.0); }
+    void setZero()
+    {
+        auto const ierr = VecSet(_v, 0.0);
+        if (ierr)
+        {
+            OGS_FATAL("PETSc ERROR %d", ierr);
+        };
+    }
     /// Disallow moving.
     /// \todo This operator should be implemented properly when doing a
     ///       general cleanup of all matrix and vector classes.
@@ -221,7 +248,13 @@ private:
     void destroy()
     {
         if (_v)
-            VecDestroy(&_v);
+        {
+            auto const ierr = VecDestroy(&_v);
+            if (ierr)
+            {
+                OGS_FATAL("PETSc ERROR %d", ierr);
+            };
+        }
         _v = nullptr;
     }
 
