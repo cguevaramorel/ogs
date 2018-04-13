@@ -12,6 +12,9 @@
 #include <cassert>
 
 #include "MaterialLib/SolidModels/CreateConstitutiveRelation.h"
+
+// TODO (naumov) move it to CreateConstitutiveRelation.h
+#include "MaterialLib/SolidModels/CreateThermoPlasticBDT.h"
 #include "ProcessLib/Output/CreateSecondaryVariables.h"
 #include "ProcessLib/Utils/ProcessUtils.h"
 
