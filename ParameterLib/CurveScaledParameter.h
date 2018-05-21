@@ -30,12 +30,25 @@ struct CurveScaledParameter final : public Parameter<T>
     }
 
     bool isTimeDependent() const override { return true; }
+
+    void setParameter(ParameterBase const* parameter)
+    {
+        if (dynamic_cast<Parameter<T> const*>(parameter) == nullptr)
+        {
+            OGS_FATAL(
+                "Could not convert the ParameterBase type to Parameter<T>; "
+                "input parameter of type %s, Parameter<T> type is %s.",
+                typeid(*parameter).name(), typeid(*_parameter).name());
+        }
+        _parameter = static_cast<Parameter<T> const*>(parameter);
+        ParameterBase::_mesh = _parameter->mesh();
+    }
+
     void initialize(
         std::vector<std::unique_ptr<ParameterBase>> const& parameters) override
     {
-        _parameter =
-            &findParameter<T>(_referenced_parameter_name, parameters, 0);
-        ParameterBase::_mesh = _parameter->mesh();
+        setParameter(
+            &findParameter<T>(_referenced_parameter_name, parameters, 0));
     }
 
     int getNumberOfComponents() const override
