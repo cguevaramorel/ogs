@@ -21,7 +21,6 @@ namespace ProcessLib
 {
 namespace HydroMechanics
 {
-
 template <int DisplacementDim>
 std::unique_ptr<Process> createHydroMechanicsProcess(
     MeshLib::Mesh& mesh,
@@ -55,9 +54,9 @@ std::unique_ptr<Process> createHydroMechanicsProcess(
         auto per_process_variables = findProcessVariables(
             variables, pv_config,
             {//! \ogs_file_param_special{prj__processes__process__HYDRO_MECHANICS__process_variables__pressure}
-            "pressure",
-            //! \ogs_file_param_special{prj__processes__process__HYDRO_MECHANICS__process_variables__displacement}
-            "displacement"});
+             "pressure",
+             //! \ogs_file_param_special{prj__processes__process__HYDRO_MECHANICS__process_variables__displacement}
+             "displacement"});
         variable_p = &per_process_variables[0].get();
         variable_u = &per_process_variables[1].get();
         process_variables.push_back(std::move(per_process_variables));

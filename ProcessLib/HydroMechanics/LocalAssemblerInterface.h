@@ -16,9 +16,8 @@ namespace ProcessLib
 {
 namespace HydroMechanics
 {
-struct LocalAssemblerInterface
-    : public ProcessLib::LocalAssemblerInterface,
-      public NumLib::ExtrapolatableElement
+struct LocalAssemblerInterface : public ProcessLib::LocalAssemblerInterface,
+                                 public NumLib::ExtrapolatableElement
 {
     virtual std::vector<double> const& getIntPtSigmaXX(
         const double /*t*/,
