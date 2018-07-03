@@ -101,6 +101,7 @@ set(ProcessesList
     RichardsFlow
     RichardsMechanics
     SmallDeformation
+    SmallDeformationNonlocal
     TES
     ThermalTwoPhaseFlowWithPP
     ThermoMechanicalPhaseField
