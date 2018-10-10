@@ -61,9 +61,11 @@ function (AddTest)
         set (AddTest_REQUIREMENTS TRUE)
     endif()
 
+    set(X_PRJ_FILE ${AddTest_EXECUTABLE_ARGS})  # For easier retrival later on
     if("${AddTest_EXECUTABLE}" STREQUAL "ogs")
         set(AddTest_EXECUTABLE_ARGS -o ${AddTest_BINARY_PATH_NATIVE} ${AddTest_EXECUTABLE_ARGS})
     endif()
+
 
     # --- Implement wrappers ---
     # check requirements, disable if not met
@@ -73,6 +75,18 @@ function (AddTest)
         message(STATUS "Requirement ${AddTest_REQUIREMENTS} not met! Disabling test ${AddTest_NAME}.")
         return()
     endif()
+
+    ##### New OgsTest command #####
+    #    if ("${AddTest_EXECUTABLE}" STREQUAL "ogs")
+    #        message("#### OgsTest(PROJECTFILE \"${AddTest_PATH}/${X_PRJ_FILE}\")")
+    #    endif()
+
+    ##### Conversion of prj files. ######
+    #    if ("${AddTest_EXECUTABLE}" STREQUAL "ogs")
+    #        message("###BEGIN### ${AddTest_SOURCE_PATH}/${X_PRJ_FILE}")
+    #    endif()
+    #    #list(GET AddTest_EXECUTABLE_ARGS 2 X_PRJ_FULL_PATH)
+    #    message("<test_definition>")
 
     if(AddTest_WRAPPER STREQUAL "time")
         if(TIME_TOOL_PATH)
@@ -194,6 +208,15 @@ Use six arguments version of AddTest with absolute and relative tolerances")
                 if("${REFERENCE_VTK_FILE}" STREQUAL "GLOB")
                     list(APPEND TESTER_COMMAND "${VTK_FILE} ${NAME_A} ${NAME_B} ${ABS_TOL} ${REL_TOL}")
                     set(GLOB_MODE TRUE)
+                    #                    message("    <vtkdiff>")
+                    #                    message("        <file>${VTK_FILE}</file>")
+                    #                    message("        <field>${NAME_B}</field>")
+                    #                    message("        <absolute_tolerance>${ABS_TOL}</absolute_tolerance>")
+                    #                    message("        <relative_tolerance>${REL_TOL}</relative_tolerance>")
+                    #                    message("    </vtkdiff>")
+                    #                    message(FATAL_ERROR "GLOBGLOBGLOB")
+                    #  file(GLOB FILES RELATIVE ${case_path} ${GLOB})
+                    # FILES = (xx1.vtu;xx2.vtu)
                 else()
                     list(APPEND TESTER_COMMAND "${SELECTED_DIFF_TOOL_PATH} \
                     ${AddTest_SOURCE_PATH}/${REFERENCE_VTK_FILE} \
@@ -201,6 +224,12 @@ Use six arguments version of AddTest with absolute and relative tolerances")
                     -a ${NAME_A} -b ${NAME_B} \
                     --abs ${ABS_TOL} --rel ${REL_TOL} \
                     ${TESTER_ARGS}")
+                    #                    message("    <vtkdiff>")
+                    #                    message("        <file>${VTK_FILE}</file>")
+                    #                    message("        <field>${NAME_B}</field>")
+                    #                    message("        <absolute_tolerance>${ABS_TOL}</absolute_tolerance>")
+                    #                    message("        <relative_tolerance>${REL_TOL}</relative_tolerance>")
+                    #                    message("    </vtkdiff>")
                 endif()
             endforeach()
         else ()
@@ -273,4 +302,6 @@ Use six arguments version of AddTest with absolute and relative tolerances")
     )
     set_tests_properties(${TESTER_NAME} PROPERTIES DEPENDS ${TEST_NAME})
 
+    #    message("</test_definition>")
+    #    message("###END###")
 endfunction()
