@@ -1,6 +1,6 @@
 /**
  * \copyright
- * Copyright (c) 2012-2017, OpenGeoSys Community (http://www.opengeosys.org)
+ * Copyright (c) 2012-2018, OpenGeoSys Community (http://www.opengeosys.org)
  *            Distributed under a Modified BSD License.
  *              See accompanying file LICENSE.txt or
  *              http://www.opengeosys.org/project/license
@@ -71,8 +71,28 @@ std::unique_ptr<Process> createSmallDeformationNonlocalProcess(
         MaterialLib::Solids::createConstitutiveRelations<DisplacementDim>(
             parameters, config);
 
+    // Solid density
+    auto& solid_density = findParameter<double>(
+        config,
+        //! \ogs_file_param_special{prj__processes__process__SMALL_DEFORMATION__solid_density}
+        "solid_density", parameters, 1);
+    DBUG("Use \'%s\' as solid density parameter.", solid_density.name.c_str());
 
+    // Specific body force
+    Eigen::Matrix<double, DisplacementDim, 1> specific_body_force;
     {
+        std::vector<double> const b =
+            //! \ogs_file_param{prj__processes__process__SMALL_DEFORMATION__specific_body_force}
+            config.getConfigParameter<std::vector<double>>(
+                "specific_body_force");
+        if (b.size() != DisplacementDim)
+            OGS_FATAL(
+                "The size of the specific body force vector does not match the "
+                "displacement dimension. Vector size is %d, displacement "
+                "dimension is %d",
+                b.size(), DisplacementDim);
+
+        std::copy_n(b.data(), b.size(), specific_body_force.data());
     }
 
     // Reference temperature
