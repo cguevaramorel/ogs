@@ -11,10 +11,7 @@
 
 #include <cassert>
 
-#include "MaterialLib/SolidModels/CreateEhlers.h"
-#include "MaterialLib/SolidModels/CreateLinearElasticIsotropic.h"
-#include "MaterialLib/SolidModels/CreateLubby2.h"
-#include "MaterialLib/SolidModels/CreateThermoPlasticBDT.h"
+#include "MaterialLib/SolidModels/CreateConstitutiveRelation.h"
 #include "ProcessLib/Output/CreateSecondaryVariables.h"
 
 #include "SmallDeformationNonlocalProcess.h"
@@ -70,40 +67,19 @@ std::unique_ptr<Process> createSmallDeformationNonlocalProcess(
         process_variables;
     process_variables.push_back(std::move(per_process_variables));
 
-    // Constitutive relation.
-    // read type;
-    auto const constitutive_relation_config =
-        //! \ogs_file_param{prj__processes__process__SMALL_DEFORMATION__constitutive_relation}
-        config.getConfigSubtree("constitutive_relation");
+    auto solid_constitutive_relations =
+        MaterialLib::Solids::createConstitutiveRelations<DisplacementDim>(
+            parameters, config);
 
-    auto const type =
-        //! \ogs_file_param{prj__processes__process__SMALL_DEFORMATION__constitutive_relation__type}
-        constitutive_relation_config.peekConfigParameter<std::string>("type");
 
-    std::unique_ptr<MaterialLib::Solids::MechanicsBase<DisplacementDim>>
-        material = nullptr;
-    if (type == "Ehlers")
     {
-        material = MaterialLib::Solids::Ehlers::createEhlers<DisplacementDim>(
-            parameters, constitutive_relation_config);
     }
-    else if (type == "LinearElasticIsotropic")
-    {
-        material =
-            MaterialLib::Solids::createLinearElasticIsotropic<DisplacementDim>(
-                parameters, constitutive_relation_config);
-    }
-    else if (type == "Lubby2")
-    {
-        material = MaterialLib::Solids::Lubby2::createLubby2<DisplacementDim>(
-            parameters, constitutive_relation_config);
-    }
-    else
-    {
-        OGS_FATAL(
-            "Cannot construct constitutive relation of given type \'%s\'.",
-            type.c_str());
-    }
+
+    // Reference temperature
+    const auto& reference_temperature =
+        //! \ogs_file_param{prj__processes__process__SMALL_DEFORMATION_NONLOCAL__reference_temperature}
+        config.getConfigParameter<double>(
+            "reference_temperature", std::numeric_limits<double>::quiet_NaN());
 
     auto const internal_length =
         //! \ogs_file_param{prj__processes__process__SMALL_DEFORMATION__internal_length}
