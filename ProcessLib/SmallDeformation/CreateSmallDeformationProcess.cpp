@@ -12,9 +12,6 @@
 #include <cassert>
 
 #include "MaterialLib/SolidModels/CreateConstitutiveRelation.h"
-
-// TODO (naumov) move it to CreateConstitutiveRelation.h
-#include "MaterialLib/SolidModels/CreateThermoPlasticBDT.h"
 #include "ProcessLib/Output/CreateSecondaryVariables.h"
 #include "ProcessLib/Utils/ProcessUtils.h"
 
@@ -70,14 +67,6 @@ createSmallDeformationProcess(
     auto solid_constitutive_relations =
         MaterialLib::Solids::createConstitutiveRelations<DisplacementDim>(
             parameters, config);
-/* TODO (naumov) move it to CreateConstRel.h
-    else if (type == "ThermoPlasticBDT")
-    {
-        material =
-            MaterialLib::Solids::ThermoPlasticBDT::createThermoPlasticBDT<
-                DisplacementDim>(parameters, constitutive_relation_config);
-    }
-	*/
 
     // Solid density
     auto& solid_density = findParameter<double>(
