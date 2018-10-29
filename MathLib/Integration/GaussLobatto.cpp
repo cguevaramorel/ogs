@@ -9,6 +9,7 @@
  *
  */
 
+#include <cmath>
 #include "GaussLobatto.h"
 
 namespace MathLib
