@@ -125,8 +125,7 @@ plasticFlowDeviatoricPart(
 
 template <int DisplacementDim>
 double yieldFunction(MaterialProperties const& mp,
-                     PhysicalStressWithInvariants<DisplacementDim> const& s,
-                     double const k)
+                     PhysicalStressWithInvariants<DisplacementDim> const& s)
 {
     double const aux_1 = (std::sqrt(3. * s.J_2) + s.I_1) / (3. * mp.fc);
     double const aux_1_squared = boost::math::pow<2>(aux_1);
@@ -193,7 +192,7 @@ calculatePlasticResidual(
         std::sqrt(2. / 3. * lambda_flow_D.transpose() * lambda_flow_D);
 
     // yield function (for plastic multiplier)
-    residual(2 * KelvinVectorSize + 2) = yieldFunction(mp, s, k) / mp.G;
+    residual(2 * KelvinVectorSize + 2) = yieldFunction(mp, s) / mp.G;
     return residual;
 }
 
@@ -508,9 +507,7 @@ SolidThermoPlasticBDT<DisplacementDim>::integrateStress(
     PhysicalStressWithInvariants<DisplacementDim> s{mp.G * sigma};
     // Quit early if sigma is zero (nothing to do) or if we are still in elastic
     // zone.
-    if ((sigma.squaredNorm() == 0 ||
-         yieldFunction(mp, s,
-                       calculateIsotropicHardening(mp.m, state.eps_p.eff)) < 0))
+    if ((sigma.squaredNorm() == 0 || yieldFunction(mp, s) < 0))
     {
         tangentStiffness.setZero();
         tangentStiffness.template topLeftCorner<3, 3>().setConstant(
