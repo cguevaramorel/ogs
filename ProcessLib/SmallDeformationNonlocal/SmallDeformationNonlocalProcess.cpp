@@ -132,6 +132,9 @@ void SmallDeformationNonlocalProcess<DisplacementDim>::
         makeExtrapolator(1, getExtrapolator(), _local_assemblers,
                          &LocalAssemblerInterface::getIntPtDamage));
 
+    // TODO (naumov) This needs a rewrite for material_id dependent
+    // constitutive relations, i.e. their corresponding internal variables.
+#if 0
     // enable output of internal variables defined by material models
     auto const internal_variables =
         _process_data.material->getInternalVariables();
@@ -181,6 +184,7 @@ void SmallDeformationNonlocalProcess<DisplacementDim>::
             makeExtrapolator(num_components, getExtrapolator(),
                              _local_assemblers, std::move(getIntPtValues)));
     }
+#endif
 
     GlobalExecutor::executeMemberOnDereferenced(
         &LocalAssemblerInterface::nonlocal, _local_assemblers,
