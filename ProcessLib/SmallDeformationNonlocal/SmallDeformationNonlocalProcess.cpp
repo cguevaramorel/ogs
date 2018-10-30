@@ -341,6 +341,8 @@ void SmallDeformationNonlocalProcess<
 template <int DisplacementDim>
 void SmallDeformationNonlocalProcess<
     DisplacementDim>::postTimestepConcreteProcess(GlobalVector const& x,
+                                                  double const /*t*/,
+                                                  double const /*dt*/,
                                                   int const /*process_id*/)
 {
     DBUG("PostTimestep SmallDeformationNonlocalProcess.");
