@@ -30,11 +30,20 @@ template <int DisplacementDim>
 struct SmallDeformationNonlocalProcessData
 {
     SmallDeformationNonlocalProcessData(
-        std::unique_ptr<MaterialLib::Solids::MechanicsBase<DisplacementDim>>&&
-            material,
+        MeshLib::PropertyVector<int> const* const material_ids_,
+        std::map<int,
+                 std::unique_ptr<
+                     MaterialLib::Solids::MechanicsBase<DisplacementDim>>>&&
+            solid_materials_,
+        Parameter<double> const& solid_density_,
+        Eigen::Matrix<double, DisplacementDim, 1>
+            specific_body_force_,
         double const reference_temperature_,
         double const internal_length_)
-        : material{std::move(material)},
+        : material_ids(material_ids_),
+          solid_materials{std::move(solid_materials_)},
+          solid_density(solid_density_),
+          specific_body_force(std::move(specific_body_force_)),
           reference_temperature(reference_temperature_),
           internal_length_squared(internal_length_ * internal_length_)
     {
@@ -53,8 +62,12 @@ struct SmallDeformationNonlocalProcessData
     //! Assignments are not needed.
     void operator=(SmallDeformationNonlocalProcessData&&) = delete;
 
-    std::unique_ptr<MaterialLib::Solids::MechanicsBase<DisplacementDim>>
-        material;
+    MeshLib::PropertyVector<int> const* const material_ids;
+
+    std::map<
+        int,
+        std::unique_ptr<MaterialLib::Solids::MechanicsBase<DisplacementDim>>>
+        solid_materials;
     /// Solid's density. A scalar quantity, Parameter<double>.
     Parameter<double> const& solid_density;
     /// Specific body forces applied to the solid.
