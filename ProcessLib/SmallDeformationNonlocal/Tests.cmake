@@ -14,12 +14,12 @@ AddTest(
 
     out_bar_coarse_ED_pcs_0_ts_60_t_0.600000.vtu out_bar_coarse_ED_pcs_0_ts_60_t_0.600000.vtu displacement displacement 2e-11 1e-13
     out_bar_coarse_ED_pcs_0_ts_60_t_0.600000.vtu out_bar_coarse_ED_pcs_0_ts_60_t_0.600000.vtu damage damage 2e-11 0
-    out_bar_coarse_ED_pcs_0_ts_60_t_0.600000.vtu out_bar_coarse_ED_pcs_0_ts_60_t_0.600000.vtu sigma sigma 1e-7 0
+    out_bar_coarse_ED_pcs_0_ts_60_t_0.600000.vtu out_bar_coarse_ED_pcs_0_ts_60_t_0.600000.vtu sigma sigma 1.5e-7 0
     out_bar_coarse_ED_pcs_0_ts_60_t_0.600000.vtu out_bar_coarse_ED_pcs_0_ts_60_t_0.600000.vtu epsilon epsilon 2e-11 0
 
     out_bar_coarse_ED_pcs_0_ts_90_t_0.900000.vtu out_bar_coarse_ED_pcs_0_ts_90_t_0.900000.vtu displacement displacement 2e-11 1e-13
     out_bar_coarse_ED_pcs_0_ts_90_t_0.900000.vtu out_bar_coarse_ED_pcs_0_ts_90_t_0.900000.vtu damage damage 2e-11 0
-    out_bar_coarse_ED_pcs_0_ts_90_t_0.900000.vtu out_bar_coarse_ED_pcs_0_ts_90_t_0.900000.vtu sigma sigma 1.2e-7 0
+    out_bar_coarse_ED_pcs_0_ts_90_t_0.900000.vtu out_bar_coarse_ED_pcs_0_ts_90_t_0.900000.vtu sigma sigma 1.5e-7 0
     out_bar_coarse_ED_pcs_0_ts_90_t_0.900000.vtu out_bar_coarse_ED_pcs_0_ts_90_t_0.900000.vtu epsilon epsilon 2e-11 0
 )
 
