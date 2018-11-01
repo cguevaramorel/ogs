@@ -2,6 +2,10 @@
 <OpenGeoSysProject>
     <mesh>bar_coarse.vtu</mesh>
     <geometry>bar.gml</geometry>
+    <search_length_algorithm>
+        <type>fixed</type>
+        <value>1e-4</value>
+    </search_length_algorithm>
     <processes>
         <process>
             <name>SD</name>
@@ -26,6 +30,7 @@
                 <mp>mp</mp>
                 <betap>betap</betap>
                 <gammap>gammap</gammap>
+                <tangent_type>tangent_type</tangent_type>
                 <damage_properties>
                     <alpha_d>alphad</alpha_d>
                     <beta_d>betad</beta_d>
@@ -37,6 +42,8 @@
                     <error_tolerance>1e-10</error_tolerance>
                 </nonlinear_solver>
             </constitutive_relation>
+            <solid_density>rho_sr</solid_density>
+            <specific_body_force>0 0</specific_body_force>
             <internal_length>0.25</internal_length>
             <process_variables>
                 <process_variable>displacement</process_variable>
@@ -93,6 +100,11 @@
         </output>
     </time_loop>
     <parameters>
+        <parameter>
+            <name>rho_sr</name>
+            <type>Constant</type>
+            <value>1</value>
+        </parameter>
         <parameter>
             <name>G</name>
             <type>Constant</type>
@@ -189,6 +201,11 @@
             <value>0.0</value>
         </parameter>
         <parameter>
+            <name>tangent_type</name>
+            <type>Constant</type>
+            <value>2</value>
+        </parameter>
+        <parameter>
             <name>displacement0</name>
             <type>Constant</type>
             <values>0 0</values>
@@ -228,10 +245,6 @@
                 <boundary_condition>
                     <geometrical_set>bar</geometrical_set>
                     <geometry>left</geometry>
-                    <search_length_algorithm>
-                        <type>fixed</type>
-                        <value>1e-4</value>
-                    </search_length_algorithm>
                     <type>Dirichlet</type>
                     <component>0</component>
                     <parameter>Dirichlet_0</parameter>
