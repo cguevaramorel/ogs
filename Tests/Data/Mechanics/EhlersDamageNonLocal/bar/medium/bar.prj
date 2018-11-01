@@ -241,10 +241,6 @@
                 <boundary_condition>
                     <geometrical_set>bar</geometrical_set>
                     <geometry>left</geometry>
-                    <search_length_algorithm>
-                        <type>fixed</type>
-                        <value>1e-4</value>
-                    </search_length_algorithm>
                     <type>Dirichlet</type>
                     <component>0</component>
                     <parameter>Dirichlet_0</parameter>
