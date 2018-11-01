@@ -26,6 +26,7 @@
                 <mp>mp</mp>
                 <betap>betap</betap>
                 <gammap>gammap</gammap>
+                <tangent_type>tangent_type</tangent_type>
                 <damage_properties>
                     <alpha_d>alphad</alpha_d>
                     <beta_d>betad</beta_d>
@@ -213,6 +214,11 @@
             <type>CurveScaled</type>
             <curve>Dirichlet_top_time</curve>
             <parameter>Dirichlet_load</parameter>
+        </parameter>
+        <parameter>
+            <name>tangent_type</name>
+            <type>Constant</type>
+            <value>2</value>
         </parameter>
     </parameters>
     <curves>
