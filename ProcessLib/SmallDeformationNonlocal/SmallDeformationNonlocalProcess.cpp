@@ -373,7 +373,8 @@ SmallDeformationNonlocalProcess<DisplacementDim>::postIterationConcreteProcess(
     INFO("Integral of crack: %g", _process_data.crack_volume);
     INFO("Volume injected: %g", _process_data.injected_volume);
 
-    if (_process_data.propagating_crack)
+    if (_process_data
+            .propagating_crack)  // TODO (naumov) <crack_injection_volume_curve>
     {
         _process_data.pressure_old = _process_data.pressure;
         _process_data.pressure +=
@@ -399,7 +400,8 @@ SmallDeformationNonlocalProcess<DisplacementDim>::postIterationConcreteProcess(
     }
 
     // TODO (parisio) try this to enforce pressure convergence.
-    if (_process_data.pressure_error > 1e-4)
+    if (_process_data.pressure_error >
+        1e-4)  // TODO (naumov) active only for <crack_injection_volume_curve>
     {
         return NumLib::IterationResult::REPEAT_ITERATION;
     }

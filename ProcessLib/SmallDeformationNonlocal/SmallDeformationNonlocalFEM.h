@@ -641,17 +641,17 @@ public:
 
             //if (_process_data.crack_volume != 0)
 
-            //if (damage > 0)
+            // if (damage > 0)
+            // if (crack_injection_volume_curve)
             {
                 double pressure = _process_data.pressure * damage;
-                // INFO("Pressure at effective stress: %.4e and sigma_prev %.4e
-                // %.4e %.4e",
-                //     _process_data.pressure,sigma_prev[0],sigma_prev[1],sigma_prev[2]);
-                // double pressure = 1.0e6* damage;
-                //_process_data.injected_volume / _process_data.crack_volume;
                 sigma_r = sigma;
                 sigma_r.template topLeftCorner<3, 1>() -=
                      Eigen::Matrix<double, 3, 1>::Constant(pressure);
+            }
+            // else
+            {
+                sigma_r = sigma;
             }
 
             local_b.noalias() -= B.transpose() * sigma_r * w;
