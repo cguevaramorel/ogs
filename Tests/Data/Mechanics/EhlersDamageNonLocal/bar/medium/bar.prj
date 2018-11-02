@@ -2,6 +2,10 @@
 <OpenGeoSysProject>
     <mesh>bar_medium.vtu</mesh>
     <geometry>bar.gml</geometry>
+    <search_length_algorithm>
+        <type>fixed</type>
+        <value>1e-4</value>
+    </search_length_algorithm>
     <processes>
         <process>
             <name>SD</name>

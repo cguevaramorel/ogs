@@ -2,6 +2,10 @@
 <OpenGeoSysProject>
     <mesh>bar_coarse.vtu</mesh>
     <geometry>bar.gml</geometry>
+    <search_length_algorithm>
+        <type>fixed</type>
+        <value>1e-4</value>
+    </search_length_algorithm>
     <processes>
         <process>
             <name>SD</name>
@@ -96,11 +100,6 @@
         </output>
     </time_loop>
     <parameters>
-        <parameter>
-            <name>rho_sr</name>
-            <type>Constant</type>
-            <value>1</value>
-        </parameter>
         <parameter>
             <name>G</name>
             <type>Constant</type>
@@ -197,11 +196,6 @@
             <value>0.0</value>
         </parameter>
         <parameter>
-            <name>tangent_type</name>
-            <type>Constant</type>
-            <value>2</value>
-        </parameter>
-        <parameter>
             <name>displacement0</name>
             <type>Constant</type>
             <values>0 0</values>
@@ -221,6 +215,16 @@
             <type>CurveScaled</type>
             <curve>Dirichlet_top_time</curve>
             <parameter>Dirichlet_load</parameter>
+        </parameter>
+        <parameter>
+            <name>tangent_type</name>
+            <type>Constant</type>
+            <value>2</value>
+        </parameter>
+        <parameter>
+            <name>rho_sr</name>
+            <type>Constant</type>
+            <value>1</value>
         </parameter>
     </parameters>
     <curves>

@@ -2,6 +2,10 @@
 <OpenGeoSysProject>
     <mesh>smallbeam_3D_quad.vtu</mesh>
     <geometry>smallbeam_3D.gml</geometry>
+    <search_length_algorithm>
+        <type>fixed</type>
+        <value>1e-6</value>
+    </search_length_algorithm>
     <processes>
         <process>
             <name>SD</name>
@@ -263,10 +267,6 @@
                 <boundary_condition>
                     <geometrical_set>smallbeam_3D</geometrical_set>
                     <geometry>bot_dx</geometry>
-                    <search_length_algorithm>
-                        <type>fixed</type>
-                        <value>1e-6</value>
-                    </search_length_algorithm>
                     <type>Dirichlet</type>
                     <component>0</component>
                     <parameter>Dirichlet_left_x</parameter>
@@ -274,10 +274,6 @@
                 <boundary_condition>
                     <geometrical_set>smallbeam_3D</geometrical_set>
                     <geometry>bot_dx</geometry>
-                    <search_length_algorithm>
-                        <type>fixed</type>
-                        <value>1e-6</value>
-                    </search_length_algorithm>
                     <type>Dirichlet</type>
                     <component>1</component>
                     <parameter>Dirichlet_left_y</parameter>
@@ -285,10 +281,6 @@
                 <boundary_condition>
                     <geometrical_set>smallbeam_3D</geometrical_set>
                     <geometry>bot_dx</geometry>
-                    <search_length_algorithm>
-                        <type>fixed</type>
-                        <value>1e-6</value>
-                    </search_length_algorithm>
                     <type>Dirichlet</type>
                     <component>2</component>
                     <parameter>Dirichlet_left_z</parameter>
@@ -296,10 +288,6 @@
                 <boundary_condition>
                     <geometrical_set>smallbeam_3D</geometrical_set>
                     <geometry>bot_sx</geometry>
-                    <search_length_algorithm>
-                        <type>fixed</type>
-                        <value>1e-6</value>
-                    </search_length_algorithm>
                     <type>Dirichlet</type>
                     <component>1</component>
                     <parameter>Dirichlet_right</parameter>
@@ -308,10 +296,6 @@
                 <boundary_condition>
                     <geometrical_set>smallbeam_3D</geometrical_set>
                     <geometry>top</geometry>
-                    <search_length_algorithm>
-                        <type>fixed</type>
-                        <value>1e-6</value>
-                    </search_length_algorithm>
                     <type>Dirichlet</type>
                     <component>1</component>
                     <parameter>Dirichlet_top</parameter>

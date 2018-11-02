@@ -2,6 +2,10 @@
 <OpenGeoSysProject>
     <mesh>griffith_quad.vtu</mesh>
     <geometry>griffith.gml</geometry>
+    <search_length_algorithm>
+        <type>fixed</type>
+        <value>1e-4</value>
+    </search_length_algorithm>
     <processes>
         <process>
             <name>SD</name>
@@ -251,10 +255,6 @@
                 <!--boundary_condition>
                     <geometrical_set>crack_propagation</geometrical_set>
                     <geometry>p_0</geometry>
-                    <search_length_algorithm>
-                        <type>fixed</type>
-                        <value>1e-4</value>
-                    </search_length_algorithm>
                     <type>Dirichlet</type>
                     <component>0</component>
                     <parameter>Dirichlet_0</parameter>
