@@ -199,9 +199,6 @@ public:
             std::unique_ptr<SmallDeformationNonlocalLocalAssemblerInterface<
                 DisplacementDim>>> const& local_assemblers) override
     {
-        // std::cout << "\nXXX nonlocal in element " << _element.getID() <<
-        // "\n";
-
         auto const search_element_ids = MeshLib::findElementsWithinRadius(
             _element, _process_data.internal_length_squared);
 
@@ -219,10 +216,8 @@ public:
             //
             // Collect the integration points.
             //
-            // std::cout << "\n\tip = " << k << "\n";
 
             auto const& xyz = _ip_data[k].coordinates;
-            // std::cout << "\tCurrent ip_k coords : " << xyz << "\n";
 
             // For all neighbors of element
             for (auto const search_element_id : search_element_ids)
@@ -253,14 +248,6 @@ public:
                 auto const& w_m = tuple.ip_l_pointer->integration_weight;
 
                 a_k_sum_m += w_m * alpha_0(distance2_m);
-
-                // int const m_ele = la_m._element.getID();
-                // std::cout
-                //    << "\tCompute sum_a_km for k = " << k << " and m = ("
-                //    << m_ele << ", " << m
-                //    << "); distance^2_m = " << distance2_m
-                //    << "alpha_0(d^2_m) = " << alpha_0(distance2_m)
-                //    << "; sum_alpha_km = " << a_k_sum_m << "\n";
             }
 
             //
@@ -269,23 +256,8 @@ public:
             //
             for (auto& tuple : _ip_data[k].non_local_assemblers)
             {
-                // auto const& la_l =
-                //    *static_cast<SmallDeformationNonlocalLocalAssembler<
-                //        ShapeFunction, IntegrationMethod,
-                //        DisplacementDim> const* const>(std::get<0>(tuple));
-
                 double const distance2_l = tuple.distance2;
-
-                // int const l_ele = la_l._element.getID();
-                // int const l = std::get<1>(tuple);
-                // std::cout << "Compute a_kl for k = " << k << " and l = ("
-                //          << l_ele << ", " << l
-                //          << "); distance^2_l = " << distance2_l << "\n";
                 double const a_kl = alpha_0(distance2_l) / a_k_sum_m;
-
-                // std::cout << "alpha_0(d^2_l) = " << alpha_0(distance2_l)
-                //          << "\n";
-                // std::cout << "alpha_kl = " << a_kl << "done\n";
 
                 // Store the a_kl already multiplied with the integration
                 // weight of that l integration point.
@@ -311,9 +283,6 @@ public:
                 nodes[i]->getCoords(), 3};
             xyz += node_coordinates * N[i];
         }
-
-        // std::cout << "\t\t singleIPcoords: xyz = " << xyz[0] << " " << xyz[1]
-        //          << " " << xyz[2] << "\n";
         return xyz;
     }
 
@@ -350,32 +319,18 @@ public:
     void preAssemble(double const t,
                      std::vector<double> const& local_x) override
     {
-        // auto const local_matrix_size = local_x.size();
-
-        // auto local_Jac = MathLib::createZeroedMatrix<StiffnessMatrixType>(
-        //    local_Jac_data, local_matrix_size, local_matrix_size);
-
-        unsigned const n_integration_points =
+        auto const n_integration_points =
             _integration_method.getNumberOfPoints();
 
         SpatialPosition x_position;
         x_position.setElementID(_element.getID());
 
-        // std::cout << "\nXXX nonlocal in element " << _element.getID() <<
-        //"\n";
-
         for (unsigned ip = 0; ip < n_integration_points; ip++)
         {
-            // std::cout << "\n\tip = " << ip << "\n";
-
             x_position.setIntegrationPoint(ip);
 
             auto const& N = _ip_data[ip].N;
             auto const& dNdx = _ip_data[ip].dNdx;
-
-            // std::cout << "\tCurrent ip_k coords : " <<
-            // _ip_data[ip].coordinates
-            //          << "\n";
 
             auto const x_coord =
                 interpolateXCoordinate<ShapeFunction, ShapeMatricesType>(
@@ -554,58 +509,25 @@ public:
                 DisplacementDim, ShapeFunction::NPOINTS,
                 typename BMatricesType::BMatrixType>(dNdx, N, x_coord,
                                                      _is_axially_symmetric);
-            // auto const& eps_prev = _ip_data[ip].eps_prev;
-            // auto const& sigma_prev = _ip_data[ip].sigma_prev;
 
             auto& sigma = _ip_data[ip].sigma;
-            auto sigma_r = _ip_data[ip].sigma;
+            auto sigma_r = _ip_data[ip].sigma;  // TODO (naumov) not a ref?
             auto& C = _ip_data[ip].C;
             double& damage = _ip_data[ip].damage;
 
-            /*
-            if (!_ip_data[ip].solid_material.updateNonlocalDamage(
-                    t, x_position, _process_data.dt, eps_prev, eps, sigma_prev,
-                    sigma, C, material_state_variables))
-                OGS_FATAL("Computation of non-local damage update failed.");
-            */
-
             {
-                // double test_alpha = 0;  // Integration of one-function.
-                // double nonlocal_kappa_d_dot = 0;
-
-                // double& nonlocal_kappa_d = _ip_data[ip].nonlocal_kappa_d;
                 double nonlocal_kappa_d = 0;
 
                 if (_ip_data[ip].active_self || _ip_data[ip].activated)
                 {
                     for (auto const& tuple : _ip_data[ip].non_local_assemblers)
                     {
-                        // If the neighbour element is different the following
-                        // static cast will not be correct.
-                        /*
-                        assert(dynamic_cast<SmallDeformationNonlocalLocalAssembler<
-                                   ShapeFunction, IntegrationMethod,
-                                   DisplacementDim> const* const>(
-                                   std::get<0>(tuple)) == nullptr);
-                                   */
-
-                        // double const kappa_d_dot = ip_l.getLocalRateKappaD();
                         // Get local variable for the integration point l.
                         double const kappa_d_l = tuple.ip_l_pointer->kappa_d;
-
-                        // std::cerr << kappa_d_l << "\n";
                         double const a_kl_times_w_l = tuple.alpha_kl_times_w_l;
-
-                        // test_alpha += a_kl;
                         nonlocal_kappa_d += a_kl_times_w_l * kappa_d_l;
                     }
                 }
-                /* For testing only.
-                if (std::abs(test_alpha - 1) >= 1e-6)
-                    OGS_FATAL(
-                        "One-function integration failed. v: %f, diff: %f",
-                        test_alpha, test_alpha - 1);
-                */
 
                 auto const& ehlers_material =
                     static_cast<MaterialLib::Solids::Ehlers::SolidEhlers<
@@ -639,9 +561,6 @@ public:
                 sigma = sigma * (1. - damage);
             }
 
-            //if (_process_data.crack_volume != 0)
-
-            // if (damage > 0)
             // if (crack_injection_volume_curve)
             {
                 double pressure = _process_data.pressure * damage;
@@ -710,8 +629,6 @@ public:
             // TODO(naumov) Simplify divergence(u) computation.
             auto const Gu = (G * u).eval();
             crack_volume += (Gu[0] + Gu[3]) * d * w;
-            // std::cerr << "(G * u).eval()" << Gu <<"\n"
-            //        << "(1 - d)" << (1 - d) <<"\n";
         }
     }
 

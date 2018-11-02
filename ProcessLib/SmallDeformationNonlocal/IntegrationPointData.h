@@ -38,23 +38,6 @@ struct IntegrationPointData final : public IntegrationPointDataNonlocalInterface
         */
     }
 
-#if defined(_MSC_VER) && _MSC_VER < 1900
-    // The default generated move-ctor is correctly generated for other
-    // compilers.
-    explicit IntegrationPointData(IntegrationPointData&& other)
-        : b_matrices(std::move(other.b_matrices)),
-          sigma(std::move(other.sigma)),
-          sigma_prev(std::move(other.sigma_prev)),
-          eps(std::move(other.eps)),
-          eps_prev(std::move(other.eps_prev)),
-          solid_material(other.solid_material),
-          material_state_variables(std::move(other.material_state_variables)),
-          C(std::move(other.C)),
-          integration_weight(std::move(other.integration_weight)),
-    {
-    }
-#endif  // _MSC_VER
-
     typename BMatricesType::BMatrixType b_matrices;
     typename BMatricesType::KelvinVectorType sigma, sigma_prev;
     typename BMatricesType::KelvinVectorType eps, eps_prev;
@@ -62,8 +45,6 @@ struct IntegrationPointData final : public IntegrationPointDataNonlocalInterface
     double damage = 0;       ///< isotropic damage
     double damage_prev = 0;  ///< \copydoc damage
     double kappa_d_prev = 0;  ///< \copydoc kappa_d
-    // double nonlocal_kappa_d = 0;
-    // double nonlocal_kappa_d_prev = 0;
 
     MaterialLib::Solids::MechanicsBase<DisplacementDim>& solid_material;
     std::unique_ptr<typename MaterialLib::Solids::MechanicsBase<
@@ -83,12 +64,10 @@ struct IntegrationPointData final : public IntegrationPointDataNonlocalInterface
         sigma_prev = sigma;
         damage_prev = damage;
         kappa_d_prev = kappa_d;
-        // nonlocal_kappa_d_prev = nonlocal_kappa_d;
         material_state_variables->pushBackState();
     }
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
-    // Unused double getLocalRateKappaD() const { return kappa_d - kappa_d_prev; }
 };
 
 }  // namespace SmallDeformationNonlocal
