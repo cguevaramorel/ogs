@@ -89,6 +89,8 @@ void SmallDeformationNonlocalProcess<DisplacementDim>::
                               MeshLib::Mesh const& mesh,
                               unsigned const integration_order)
 {
+    // TODO (naumov) The createLocalAssemblers and the LocalDataInitializer are
+    // same as the ProcessLib::SmallDeformation. REUSE.
     ProcessLib::SmallDeformationNonlocal::createLocalAssemblers<
         DisplacementDim, SmallDeformationNonlocalLocalAssembler>(
         mesh.getElements(), dof_table, _local_assemblers,
