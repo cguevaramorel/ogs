@@ -87,6 +87,7 @@ struct IntegrationPointData final : public IntegrationPointDataNonlocalInterface
         material_state_variables->pushBackState();
     }
 
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
     // Unused double getLocalRateKappaD() const { return kappa_d - kappa_d_prev; }
 };
 

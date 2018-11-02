@@ -37,6 +37,8 @@ struct IntegrationPointDataNonlocalInterface
     Eigen::Vector3d coordinates;
     bool active_self = false;
     bool activated = false;
+
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 };
 }  // namespace SmallDeformationNonlocal
 }  // namespace ProcessLib
