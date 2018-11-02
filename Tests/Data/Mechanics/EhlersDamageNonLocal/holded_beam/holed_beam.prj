@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <OpenGeoSysProject>
-    <mesh>holed_beam_sf.vtu</mesh>
-    <geometry>holed_beam.gml</geometry>
+    <meshes>
+        <mesh>holed_beam_sf.vtu</mesh>
+        <mesh>holed_beam_left.vtu</mesh>
+        <mesh>holed_beam_p_1.vtu</mesh>
+        <mesh>holed_beam_p_5.vtu</mesh>
+        <mesh>holed_beam_right.vtu</mesh>
+    </meshes>
     <processes>
         <process>
             <name>SD</name>
@@ -239,41 +244,32 @@
             <boundary_conditions>
                 <!-- fixed boundaries -->
                 <boundary_condition>
-                    <geometrical_set>holed_beam</geometrical_set>
-                    <geometry>left</geometry>
-                    <search_length_algorithm>
-                        <type>fixed</type>
-                        <value>1e-4</value>
-                    </search_length_algorithm>
+                    <mesh>holed_beam_left</mesh>
                     <type>Dirichlet</type>
                     <component>0</component>
                     <parameter>Dirichlet_0</parameter>
                 </boundary_condition>
                 <boundary_condition>
-                    <geometrical_set>holed_beam</geometrical_set>
-                    <geometry>left</geometry>
+                    <mesh>holed_beam_left</mesh>
                     <type>Dirichlet</type>
                     <component>1</component>
                     <parameter>Dirichlet_0</parameter>
                 </boundary_condition>
                 <boundary_condition>
-                    <geometrical_set>holed_beam</geometrical_set>
-                    <geometry>p_5</geometry>
+                    <mesh>holed_beam_p_5</mesh>
                     <type>Dirichlet</type>
                     <component>1</component>
                     <parameter>Dirichlet_0</parameter>
                 </boundary_condition>
                 <boundary_condition>
-                    <geometrical_set>holed_beam</geometrical_set>
-                    <geometry>p_1</geometry>
+                    <mesh>holed_beam_p_1</mesh>
                     <type>Dirichlet</type>
                     <component>1</component>
                     <parameter>Dirichlet_0</parameter>
                 </boundary_condition>
                 <!-- force -->
                 <boundary_condition>
-                    <geometrical_set>holed_beam</geometrical_set>
-                    <geometry>right</geometry>
+                    <mesh>holed_beam_right</mesh>
                     <type>Dirichlet</type>
                     <component>0</component>
                     <parameter>Dirichlet_top_y</parameter>
