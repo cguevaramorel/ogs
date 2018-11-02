@@ -43,7 +43,7 @@
                 </nonlinear_solver>
             </constitutive_relation>
             <solid_density>rho_sr</solid_density>
-            <specific_body_force>0 0</specific_body_force>
+            <specific_body_force>0 0 0</specific_body_force>
             <internal_length>0.0025</internal_length>
             <!--eventually to 2.5mm-->
             <process_variables>
