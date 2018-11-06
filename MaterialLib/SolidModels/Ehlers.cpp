@@ -623,21 +623,26 @@ SolidEhlers<DisplacementDim>::integrateStress(
             linear_solver.solve(-dresidual_deps)
                 .template block<KelvinVectorSize, KelvinVectorSize>(0, 0);
 
-        if (mp.tangent_type == 0)
+        if (_tangent_type == TangentType::Elastic)
         {
             tangentStiffness.template topLeftCorner<3, 3>().setConstant(
                 mp.K - 2. / 3 * mp.G);
             tangentStiffness.noalias() += 2 * mp.G * KelvinMatrix::Identity();
         }
-        else if (mp.tangent_type == 1)
+        else if (_tangent_type == TangentType::PlasticDamageSecant)
+        {
             tangentStiffness *= 1 - state.damage.value();
-        else if (mp.tangent_type == 2)
+        }
+        else if (_tangent_type == TangentType::Plastic)
         {
         }
         else
+        {
             OGS_FATAL(
-                "Inadmissible value for tangent_type: 0 = Elastic; 1 = "
-                "Plastic-Damage secant; 2 = Plastic.");
+                "Unimplemented tangent type behaviour for the tangent type "
+                "'%d'.",
+                _tangent_type);
+        }
     }
 
     KelvinVector sigma_final = mp.G * sigma;

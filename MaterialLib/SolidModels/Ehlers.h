@@ -35,6 +35,24 @@ namespace Solids
 {
 namespace Ehlers
 {
+enum class TangentType
+{
+    Elastic,
+    PlasticDamageSecant,
+    Plastic
+};
+inline TangentType makeTangentType(std::string const& s)
+{
+    if (s == "Elastic")
+        return TangentType::Elastic;
+    if (s == "PlasticDamageSecant")
+        return TangentType::PlasticDamageSecant;
+    if (s == "Plastic")
+        return TangentType::Plastic;
+    OGS_FATAL("Not valid string '%s' to create a tangent type from.",
+              s.c_str());
+}
+
 /// material parameters in relation to Ehler's single-surface model see Ehler's
 /// paper "A single-surface yield function for geomaterials" for more details
 /// \cite Ehlers1995.
@@ -42,12 +60,14 @@ struct MaterialPropertiesParameters
 {
     using P = ProcessLib::Parameter<double>;
 
-    MaterialPropertiesParameters(
-        P const& G_, P const& K_, P const& alpha_, P const& beta_,
-        P const& gamma_, P const& delta_, P const& epsilon_, P const& m_,
-        P const& alpha_p_, P const& beta_p_, P const& gamma_p_,
-        P const& delta_p_, P const& epsilon_p_, P const& m_p_, P const& kappa_,
-        P const& hardening_coefficient_, P const& tangent_type_)
+    MaterialPropertiesParameters(P const& G_, P const& K_, P const& alpha_,
+                                 P const& beta_, P const& gamma_,
+                                 P const& delta_, P const& epsilon_,
+                                 P const& m_, P const& alpha_p_,
+                                 P const& beta_p_, P const& gamma_p_,
+                                 P const& delta_p_, P const& epsilon_p_,
+                                 P const& m_p_, P const& kappa_,
+                                 P const& hardening_coefficient_)
         : G(G_),
           K(K_),
           alpha(alpha_),
@@ -63,8 +83,7 @@ struct MaterialPropertiesParameters
           epsilon_p(epsilon_p_),
           m_p(m_p_),
           kappa(kappa_),
-          hardening_coefficient(hardening_coefficient_),
-          tangent_type(tangent_type_)
+          hardening_coefficient(hardening_coefficient_)
     {
     }
     // basic material parameters
@@ -88,7 +107,6 @@ struct MaterialPropertiesParameters
 
     P const& kappa;  ///< hardening parameter
     P const& hardening_coefficient;
-    P const& tangent_type;
 };
 
 struct DamagePropertiesParameters
@@ -121,8 +139,7 @@ struct MaterialProperties final
           epsilon_p(mp.epsilon_p(t, x)[0]),
           m_p(mp.m_p(t, x)[0]),
           kappa(mp.kappa(t, x)[0]),
-          hardening_coefficient(mp.hardening_coefficient(t, x)[0]),
-          tangent_type(mp.tangent_type(t, x)[0])
+          hardening_coefficient(mp.hardening_coefficient(t, x)[0])
     {
     }
     double const G;
@@ -144,7 +161,6 @@ struct MaterialProperties final
 
     double const kappa;
     double const hardening_coefficient;
-    double const tangent_type;
 };
 
 /// Evaluated DamagePropertiesParameters container, see its documentation for
@@ -287,10 +303,12 @@ public:
     explicit SolidEhlers(
         NumLib::NewtonRaphsonSolverParameters nonlinear_solver_parameters,
         MaterialPropertiesParameters material_properties,
-        std::unique_ptr<DamagePropertiesParameters>&& damage_properties)
+        std::unique_ptr<DamagePropertiesParameters>&& damage_properties,
+        TangentType tangent_type)
         : _nonlinear_solver_parameters(std::move(nonlinear_solver_parameters)),
           _mp(std::move(material_properties)),
-          _damage_properties(std::move(damage_properties))
+          _damage_properties(std::move(damage_properties)),
+          _tangent_type(tangent_type)
     {
     }
 
@@ -346,6 +364,7 @@ private:
 
     MaterialPropertiesParameters _mp;
     std::unique_ptr<DamagePropertiesParameters> _damage_properties;
+    TangentType const _tangent_type;
 };
 
 extern template class SolidEhlers<2>;
