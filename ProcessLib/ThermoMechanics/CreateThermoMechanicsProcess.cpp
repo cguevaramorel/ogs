@@ -13,8 +13,6 @@
 
 #include "MaterialLib/SolidModels/MechanicsBase.h"
 #include "MaterialLib/SolidModels/CreateConstitutiveRelation.h"
-// TODO (naumov) Move it too.
-#include "MaterialLib/SolidModels/CreateThermoPlasticBDT.h"
 #include "ProcessLib/Output/CreateSecondaryVariables.h"
 #include "ProcessLib/Utils/ProcessUtils.h"
 

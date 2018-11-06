@@ -14,7 +14,6 @@
 #include <logog/include/logog.hpp>
 
 #include "MaterialLib/SolidModels/Ehlers.h"
-#include "MaterialLib/SolidModels/ThermoPlasticBDT.h"
 
 namespace ProcessLib
 {

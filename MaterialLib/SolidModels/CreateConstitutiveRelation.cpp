@@ -16,7 +16,6 @@
 #include "CreateLinearElasticIsotropic.h"
 #include "CreateLubby2.h"
 #include "MFront/CreateMFront.h"
-#include "CreateThermoPlasticBDT.h"
 
 #include "MechanicsBase.h"
 
@@ -64,10 +63,6 @@ createConstitutiveRelation(
     {
         return MaterialLib::Solids::MFront::createMFront<DisplacementDim>(
             parameters, config);
-    if (type == "ThermoPlasticBDT")
-    {
-        return MaterialLib::Solids::ThermoPlasticBDT::createThermoPlasticBDT<
-            DisplacementDim>(parameters, config);
     }
     OGS_FATAL("Cannot construct constitutive relation of given type \'%s\'.",
               type.c_str());
