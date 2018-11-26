@@ -54,6 +54,19 @@ MathLib::KelvinVector::KelvinMatrixType<DisplacementDim> sOdotS(
     MathLib::KelvinVector::KelvinVectorType<DisplacementDim> const& v);
 
 template <int DisplacementDim>
+MathLib::KelvinVector::KelvinMatrixType<DisplacementDim>
+elasticTangentStiffness(double const K, double const G)
+{
+    using KelvinMatrix =
+        MathLib::KelvinVector::KelvinMatrixType<DisplacementDim>;
+
+    KelvinMatrix tangentStiffness = KelvinMatrix::Zero();
+    tangentStiffness.template topLeftCorner<3, 3>().setConstant(K - 2. / 3 * G);
+    tangentStiffness.noalias() += 2 * G * KelvinMatrix::Identity();
+    return tangentStiffness;
+}
+
+template <int DisplacementDim>
 struct PhysicalStressWithInvariants final
 {
     static int const KelvinVectorSize =
@@ -514,10 +527,7 @@ SolidEhlers<DisplacementDim>::integrateStress(
              calculateIsotropicHardening(mp.kappa, mp.hardening_coefficient,
                                          state.eps_p.eff)) < 0))
     {
-        tangentStiffness.setZero();
-        tangentStiffness.template topLeftCorner<3, 3>().setConstant(
-            mp.K - 2. / 3 * mp.G);
-        tangentStiffness.noalias() += 2 * mp.G * KelvinMatrix::Identity();
+        tangentStiffness = elasticTangentStiffness<DisplacementDim>(mp.K, mp.G);
     }
     else
     {
@@ -618,23 +628,22 @@ SolidEhlers<DisplacementDim>::integrateStress(
         dresidual_deps.template block<KelvinVectorSize, KelvinVectorSize>(0, 0)
             .noalias() = calculateDResidualDEps<DisplacementDim>(mp.K, mp.G);
 
-        tangentStiffness =
-            mp.G *
-            linear_solver.solve(-dresidual_deps)
-                .template block<KelvinVectorSize, KelvinVectorSize>(0, 0);
-
         if (_tangent_type == TangentType::Elastic)
         {
-            tangentStiffness.template topLeftCorner<3, 3>().setConstant(
-                mp.K - 2. / 3 * mp.G);
-            tangentStiffness.noalias() += 2 * mp.G * KelvinMatrix::Identity();
+            tangentStiffness =
+                elasticTangentStiffness<DisplacementDim>(mp.K, mp.G);
         }
-        else if (_tangent_type == TangentType::PlasticDamageSecant)
+        else if (_tangent_type == TangentType::Plastic ||
+                 _tangent_type == TangentType::PlasticDamageSecant)
         {
-            tangentStiffness *= 1 - state.damage.value();
-        }
-        else if (_tangent_type == TangentType::Plastic)
-        {
+            tangentStiffness =
+                mp.G *
+                linear_solver.solve(-dresidual_deps)
+                    .template block<KelvinVectorSize, KelvinVectorSize>(0, 0);
+            if (_tangent_type == TangentType::PlasticDamageSecant)
+            {
+                tangentStiffness *= 1 - state.damage.value();
+            }
         }
         else
         {
