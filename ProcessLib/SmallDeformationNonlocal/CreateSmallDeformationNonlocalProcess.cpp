@@ -13,6 +13,7 @@
 
 #include "MaterialLib/SolidModels/CreateConstitutiveRelation.h"
 #include "ProcessLib/Output/CreateSecondaryVariables.h"
+#include "ProcessLib/Utils/ProcessUtils.h"
 
 #include "SmallDeformationNonlocalProcess.h"
 #include "SmallDeformationNonlocalProcessData.h"
@@ -21,12 +22,6 @@ namespace ProcessLib
 {
 namespace SmallDeformationNonlocal
 {
-template <int DisplacementDim>
-class SmallDeformationNonlocalProcess;
-
-extern template class SmallDeformationNonlocalProcess<2>;
-extern template class SmallDeformationNonlocalProcess<3>;
-
 template <int DisplacementDim>
 std::unique_ptr<Process> createSmallDeformationNonlocalProcess(
     MeshLib::Mesh& mesh,
@@ -102,7 +97,7 @@ std::unique_ptr<Process> createSmallDeformationNonlocalProcess(
             "reference_temperature", std::numeric_limits<double>::quiet_NaN());
 
     auto const internal_length =
-        //! \ogs_file_param{prj__processes__process__SMALL_DEFORMATION__internal_length}
+        //! \ogs_file_param{prj__processes__process__SMALL_DEFORMATION_NONLOCAL__internal_length}
         config.getConfigParameter<double>("internal_length");
 
     SmallDeformationNonlocalProcessData<DisplacementDim> process_data{
