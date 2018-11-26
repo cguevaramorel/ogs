@@ -532,18 +532,18 @@ public:
                     static_cast<MaterialLib::Solids::Ehlers::SolidEhlers<
                         DisplacementDim> const&>(_ip_data[ip].solid_material);
 
-                // === Overnonlocal formulation ===
+                //
+                // Overnonlocal formulation
+                //
+                // See (Di Luzio & Bazant 2005, IJSS) for details.
+                // The implementation would go here and would be for a given
+                // gamma_nonlocal:
+                //
                 // Update nonlocal damage with local damage (scaled with 1 -
                 // \gamma_{nonlocal}) for the current integration point and the
                 // nonlocal integral part.
-                {
-                    double const gamma_nonlocal =
-                        ehlers_material.evaluatedDamageProperties(t, x_position)
-                            .m_d;
-                    nonlocal_kappa_d = (1. - gamma_nonlocal) *
-                                           _ip_data[ip].kappa_d +
-                                       gamma_nonlocal * nonlocal_kappa_d;
-                }
+                // nonlocal_kappa_d = (1. - gamma_nonlocal) * kappa_d +
+                //                    gamma_nonlocal * nonlocal_kappa_d;
 
                 nonlocal_kappa_d = std::max(0., nonlocal_kappa_d);
 
