@@ -12,6 +12,9 @@
 #include <nlohmann/json.hpp>
 #include <iostream>
 
+// Reuse local assembler creation code.
+#include "ProcessLib/SmallDeformation/CreateLocalAssemblers.h"
+
 namespace ProcessLib
 {
 namespace SmallDeformationNonlocal
@@ -89,9 +92,7 @@ void SmallDeformationNonlocalProcess<DisplacementDim>::
                               MeshLib::Mesh const& mesh,
                               unsigned const integration_order)
 {
-    // TODO (naumov) The createLocalAssemblers and the LocalDataInitializer are
-    // same as the ProcessLib::SmallDeformation. REUSE.
-    ProcessLib::SmallDeformationNonlocal::createLocalAssemblers<
+    ProcessLib::SmallDeformation::createLocalAssemblers<
         DisplacementDim, SmallDeformationNonlocalLocalAssembler>(
         mesh.getElements(), dof_table, _local_assemblers,
         mesh.isAxiallySymmetric(), integration_order, _process_data);
