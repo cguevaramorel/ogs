@@ -43,34 +43,11 @@ double calculateDamageKappaD(
     // Default case of the rate problem. Updated below if volumetric plastic
     // strain rate is positive (dilatancy).
 
-    Eigen::Matrix<double, DisplacementDim, DisplacementDim> stress_mat =
-        Eigen::Matrix<double, DisplacementDim, DisplacementDim>::Zero();
+    // non-const for Eigen solver.
+    auto sigma_tensor = MathLib::KelvinVector::kelvinVectorToTensor(sigma);
 
-    for (int i = 0; i < DisplacementDim; ++i)
-    {
-        for (int j = 0; j < DisplacementDim; ++j)
-        {
-            if (i == j)
-            {
-                stress_mat(i, j) = sigma(i);
-            }
-            else
-            {
-                // TODO (parisio) This results in a matrix
-                // xx xy yz
-                // xy yy xz
-                // yz xz zz
-                //
-                // Is the placement of the yz and xz entries correct?
-                // Maybe it is better to use the kelvinVectorToTensor function?
-                stress_mat(i, j) = sigma(i + j + 2);
-            }
-        }
-    }
-
-    Eigen::EigenSolver<decltype(stress_mat)> eigen_solver(stress_mat);
-    Eigen::Matrix<std::complex<double>, DisplacementDim, 1> const
-        principal_stress = eigen_solver.eigenvalues();
+    Eigen::EigenSolver<decltype(sigma_tensor)> eigen_solver(sigma_tensor);
+    auto const principal_stress = eigen_solver.eigenvalues();
     double const prod_stress = square(real(principal_stress.array())).sum();
 
     // Brittleness decrease with confinement for the nonlinear flow rule.
