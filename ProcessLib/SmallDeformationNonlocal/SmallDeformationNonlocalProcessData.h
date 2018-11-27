@@ -89,6 +89,8 @@ struct SmallDeformationNonlocalProcessData
     double pressure = 0.0;
     double pressure_old = 0.0;
     double pressure_error = 0.0;
+
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 };
 
 }  // namespace SmallDeformationNonlocal
