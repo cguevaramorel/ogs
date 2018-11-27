@@ -32,7 +32,6 @@ inline double calculateDamage(double const kappa_d, double const alpha_d,
     return damage;
 }
 
-/// \Returns a new kappa_d.
 template <int DisplacementDim, typename KelvinVectorType>
 double calculateDamageKappaD(
     double const eps_p_eff_diff,
@@ -57,6 +56,13 @@ double calculateDamageKappaD(
             }
             else
             {
+                // TODO (parisio) This results in a matrix
+                // xx xy yz
+                // xy yy xz
+                // yz xz zz
+                //
+                // Is the placement of the yz and xz entries correct?
+                // Maybe it is better to use the kelvinVectorToTensor function?
                 stress_mat(i, j) = sigma(i + j + 2);
             }
         }
@@ -65,28 +71,27 @@ double calculateDamageKappaD(
     Eigen::EigenSolver<decltype(stress_mat)> eigen_solver(stress_mat);
     Eigen::Matrix<std::complex<double>, DisplacementDim, 1> const
         principal_stress = eigen_solver.eigenvalues();
-    // building kappa_d (damage driving variable)
     double const prod_stress = square(real(principal_stress.array())).sum();
 
     // Brittleness decrease with confinement for the nonlinear flow rule.
     // ATTENTION: For linear flow rule -> constant brittleness.
     double const f_t =
         std::sqrt(3.0) * mp.kappa / (1 + std::sqrt(3.0) * mp.beta);
-    double const r_s = std::sqrt(prod_stress) / f_t;
+    double const r_s = std::sqrt(prod_stress) / f_t - 1.;
 
-    double x_s = 0;
-    if (r_s < 1)
-    {
-        x_s = 1;
-    }
-    else if (r_s >= 1 && r_s <= 2)
-    {
-        x_s = 1 + dp.h_d * (r_s - 1) * (r_s - 1);
-    }
-    else
-    {
-        x_s = 1 - 3 * dp.h_d + 4 * dp.h_d * std::sqrt(r_s - 1);
-    }
+    // TODO (parisio) What is this r_s and x_s? Need some proper names. Looks
+    // like some parabola cut-offs.
+    double const x_s = [](double const h_d, double const r_s) {
+        if (r_s < 0)
+        {
+            return 1.;
+        }
+        if (r_s <= 1)
+        {
+            return 1. + h_d * r_s * r_s;
+        }
+        return 1. - 3 * h_d + 4 * h_d * std::sqrt(r_s);
+    }(dp.h_d, r_s);
 
     return kappa_d_prev + eps_p_eff_diff / x_s;
 }
