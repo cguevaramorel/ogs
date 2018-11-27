@@ -63,14 +63,10 @@ double calculateDamageKappaD(
     }
 
     Eigen::EigenSolver<decltype(stress_mat)> eigen_solver(stress_mat);
-    auto const& principal_stress = eigen_solver.eigenvalues();
+    Eigen::Matrix<std::complex<double>, DisplacementDim, 1> const
+        principal_stress = eigen_solver.eigenvalues();
     // building kappa_d (damage driving variable)
-    double prod_stress = 0.;
-    for (int i = 0; i < DisplacementDim; ++i)
-    {
-        double const real_eigen_value = real(principal_stress(i, 0));
-        prod_stress = prod_stress + boost::math::pow<2>(real_eigen_value);
-    }
+    double const prod_stress = square(real(principal_stress.array())).sum();
 
     // Brittleness decrease with confinement for the nonlinear flow rule.
     // ATTENTION: For linear flow rule -> constant brittleness.
