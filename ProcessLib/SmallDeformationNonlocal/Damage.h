@@ -48,13 +48,14 @@ double calculateDamageKappaD(
 
     Eigen::EigenSolver<decltype(sigma_tensor)> eigen_solver(sigma_tensor);
     auto const principal_stress = eigen_solver.eigenvalues();
-    double const prod_stress = square(real(principal_stress.array())).sum();
+    double const prod_stress =
+        std::sqrt(square(real(principal_stress.array())).sum());
 
     // Brittleness decrease with confinement for the nonlinear flow rule.
     // ATTENTION: For linear flow rule -> constant brittleness.
-    double const f_t =
+    double const tensile_strength =
         std::sqrt(3.0) * mp.kappa / (1 + std::sqrt(3.0) * mp.beta);
-    double const r_s = std::sqrt(prod_stress) / f_t - 1.;
+    double const r_s = prod_stress / tensile_strength - 1.;
 
     // TODO (parisio) What is this r_s and x_s? Need some proper names. Looks
     // like some parabola cut-offs.
