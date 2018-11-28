@@ -337,7 +337,10 @@ void SmallDeformationNonlocalProcess<
 
     _process_data.dt = dt;
     _process_data.t = t;
-    _process_data.injected_volume = _process_data.t;
+    if (_process_data.pressure_injection_in_crack)
+    {
+        _process_data.pressure_injection_in_crack->setInjectionVolume(t);
+    }
 
     GlobalExecutor::executeMemberOnDereferenced(
         &LocalAssemblerInterface::preTimestep, _local_assemblers,
@@ -374,41 +377,21 @@ SmallDeformationNonlocalProcess<DisplacementDim>::postIterationConcreteProcess(
         *_local_to_global_index_map, x, _process_data.crack_volume);
 
     INFO("Integral of crack: %g", _process_data.crack_volume);
-    INFO("Volume injected: %g", _process_data.injected_volume);
 
-    if (_process_data
-            .propagating_crack)  // TODO (naumov) <crack_injection_volume_curve>
+    // TODO (naumov) <crack_injection_volume_curve>
+    if (_process_data.pressure_injection_in_crack)
     {
-        _process_data.pressure_old = _process_data.pressure;
-        _process_data.pressure +=
-                (_process_data.injected_volume - _process_data.crack_volume)*_process_data.stiffness;
+        double const pressure_increment =
+            _process_data.pressure_injection_in_crack->updatePressure(
+                _process_data.crack_volume);
 
-        _process_data.pressure_error =
-            _process_data.pressure == 0
-                ? 0
-                : std::abs(_process_data.pressure_old -
-                           _process_data.pressure) /
-                           _process_data.pressure;
-
-        //_process_data.stiffness *= _process_data.pressure_error;
-
-        INFO("Internal pressure: %g and Pressure error: %.4e",
-             _process_data.pressure, _process_data.pressure_error);
-
-        // TODO (parisio) Is this correct?
-        // Update displacement field
-        //assert(_coupled_solutions == nullptr);
-        //MathLib::LinAlg::scale(const_cast<GlobalVector&>(x),
-        //                       _process_data.pressure);
+        // TODO (parisio) try this to enforce pressure convergence.
+        if (std::abs(pressure_increment) >
+            1e-4 * _process_data.pressure_injection_in_crack->pressure())
+        {
+            return NumLib::IterationResult::REPEAT_ITERATION;
+        }
     }
-
-    // TODO (parisio) try this to enforce pressure convergence.
-    if (_process_data.pressure_error >
-        1e-4)  // TODO (naumov) active only for <crack_injection_volume_curve>
-    {
-        return NumLib::IterationResult::REPEAT_ITERATION;
-    }
-
 
     return NumLib::IterationResult::SUCCESS;
 }

@@ -26,6 +26,45 @@ namespace ProcessLib
 {
 namespace SmallDeformationNonlocal
 {
+class PressureInjectionInCrack
+{
+public:
+    explicit PressureInjectionInCrack(double const stiffness)
+        : _stiffness(stiffness)
+    {
+    }
+
+    void setInjectionVolume(double const volume)
+    {
+        _injected_volume = volume;
+        INFO("Volume injected: %g", _injected_volume);
+    }
+
+    /// Update the pressure based on the injected volume and the crack volume
+    /// and returns the pressure increment.
+    double updatePressure(double const crack_volume)
+    {
+        _pressure_old = _pressure;
+        double const increment = (_injected_volume - crack_volume) * _stiffness;
+        _pressure += increment;
+
+        INFO("Internal pressure: %g and pressure increment: %.4e", _pressure,
+             increment);
+
+        return increment;
+    }
+
+    double pressure() const { return _pressure; }
+
+private:
+    double _injected_volume = std::numeric_limits<double>::quiet_NaN();
+
+    double const _stiffness;  // = 2.15e11;
+
+    double _pressure = std::numeric_limits<double>::quiet_NaN();
+    double _pressure_old = std::numeric_limits<double>::quiet_NaN();
+};
+
 template <int DisplacementDim>
 struct SmallDeformationNonlocalProcessData
 {
@@ -74,21 +113,15 @@ struct SmallDeformationNonlocalProcessData
     /// It is usually used to apply gravitational forces.
     /// A vector of displacement dimension's length.
     Eigen::Matrix<double, DisplacementDim, 1> const specific_body_force;
+
+    boost::optional<PressureInjectionInCrack> pressure_injection_in_crack;
+    double crack_volume_old = 0.0;
+    double crack_volume = 0.0;
+
     double dt = 0;
     double t = 0;
     double const reference_temperature;
     double const internal_length_squared;
-
-    double injected_volume = 0.0;
-    double crack_volume_old = 0.0;
-    double crack_volume = 0.0;
-    bool propagating_crack = false;
-
-    double stiffness = 2.15e11;
-
-    double pressure = 0.0;
-    double pressure_old = 0.0;
-    double pressure_error = 0.0;
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 };

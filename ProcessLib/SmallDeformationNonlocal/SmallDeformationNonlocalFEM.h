@@ -560,16 +560,15 @@ public:
                 sigma = sigma * (1. - damage);
             }
 
+            sigma_r = sigma;
+            if (_process_data.pressure_injection_in_crack)
             // if (crack_injection_volume_curve)
             {
-                double pressure = _process_data.pressure * damage;
-                sigma_r = sigma;
+                double pressure =
+                    _process_data.pressure_injection_in_crack->pressure() *
+                    damage;
                 sigma_r.template topLeftCorner<3, 1>() -=
                      Eigen::Matrix<double, 3, 1>::Constant(pressure);
-            }
-            // else
-            {
-                sigma_r = sigma;
             }
 
             local_b.noalias() -= B.transpose() * sigma_r * w;
