@@ -12,6 +12,7 @@
 
 #include <memory>
 
+#include "MaterialLib/MPL/Property.h"
 #include "MaterialLib/SolidModels/LinearElasticIsotropic.h"
 #include "MathLib/KelvinVector.h"
 #include "MathLib/LinAlg/Eigen/EigenMapTools.h"
@@ -24,12 +25,13 @@ template <typename BMatricesType, typename ShapeMatrixTypeDisplacement,
           typename ShapeMatricesTypePressure, int DisplacementDim, int NPoints>
 struct IntegrationPointData final
 {
-    explicit IntegrationPointData(
-        MaterialLib::Solids::MechanicsBase<DisplacementDim> const&
-            solid_material)
+    explicit IntegrationPointData(MaterialLib::Solids::MechanicsBase<
+                                      DisplacementDim> const& solid_material,
+                                  MaterialPropertyLib::Property const& porosity)
         : solid_material(solid_material),
           material_state_variables(
               solid_material.createMaterialStateVariables())
+              porosity_state(porosity.createState())
     {
         // Initialize current time step values
         static const int kelvin_vector_size =
@@ -68,6 +70,8 @@ struct IntegrationPointData final
     std::unique_ptr<typename MaterialLib::Solids::MechanicsBase<
         DisplacementDim>::MaterialStateVariables>
         material_state_variables;
+    std::unique_ptr<typename MaterialPropertyLib::State> porosity_state;
+
     double integration_weight;
 
     void pushBackState()
@@ -79,6 +83,7 @@ struct IntegrationPointData final
         porosity_prev = porosity;
         transport_porosity_prev = transport_porosity;
         material_state_variables->pushBackState();
+        porosity_state->pushBackState();
     }
 
     typename BMatricesType::KelvinMatrixType computeElasticTangentStiffness(

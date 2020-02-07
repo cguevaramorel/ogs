@@ -67,10 +67,13 @@ RichardsMechanicsLocalAssembler<ShapeFunctionDisplacement,
 
     ParameterLib::SpatialPosition x_position;
     x_position.setElementID(_element.getID());
+    auto const& porosity_model =
+        solid_phase.property(MPL::PropertyType::porosity);
+
     for (unsigned ip = 0; ip < n_integration_points; ip++)
     {
         x_position.setIntegrationPoint(ip);
-        _ip_data.emplace_back(solid_material);
+        _ip_data.emplace_back(solid_material, porosity_model);
         auto& ip_data = _ip_data[ip];
         auto const& sm_u = shape_matrices_u[ip];
         _ip_data[ip].integration_weight =
@@ -561,7 +564,7 @@ void RichardsMechanicsLocalAssembler<ShapeFunctionDisplacement,
             liquid_phase.property(MPL::PropertyType::bulk_modulus)
                 .template value<double>(variables, x_position, t, dt);
 
-        auto const rho_LR =
+        auto const porosity_update = auto const rho_LR =
             liquid_phase.property(MPL::PropertyType::density)
                 .template value<double>(variables, x_position, t, dt);
         auto const& b = _process_data.specific_body_force;
