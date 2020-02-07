@@ -39,7 +39,7 @@ public:
                            ParameterLib::SpatialPosition const& /*pos*/,
                            double const /*t*/,
                            double const /*dt*/,
-                           State* const state) const override;
+                           State* const state = nullptr) const override;
 
     /// This method will compute the derivative of a property with respect to
     /// the given primary variable.

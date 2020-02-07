@@ -13,5 +13,6 @@ namespace MaterialPropertyLib
 struct State
 {
     virtual ~State() = default;
+    virtual void pushBackState(){};
 };
 }  // namespace MaterialPropertyLib
