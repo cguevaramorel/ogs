@@ -43,7 +43,8 @@ double molarMass(Phase* _phase, Component* _component,
 
 PropertyDataType IdealGasLaw::value(VariableArray const& variable_array,
                                     ParameterLib::SpatialPosition const& pos,
-                                    double const t, double const dt) const
+                                    double const t, double const dt,
+                                    State* const /*state*/) const
 {
     const double gas_constant = MaterialLib::PhysicalConstant::IdealGasConstant;
     const double pressure = std::get<double>(

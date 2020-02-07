@@ -1,4 +1,5 @@
 /**
+/**
  * \file
  * \author Norbert Grunwald
  * \date   02.07.2018
@@ -35,8 +36,8 @@ RelPermBrooksCorey::RelPermBrooksCorey(
 
 PropertyDataType RelPermBrooksCorey::value(
     VariableArray const& variable_array,
-    ParameterLib::SpatialPosition const& pos, double const t,
-    double const dt) const
+    ParameterLib::SpatialPosition const& pos, double const t, double const dt,
+    State* const /*state*/) const
 {
     /// here, an extra computation of saturation is forced, guaranteeing a
     /// correct value. In order to speed up the computing time, saturation could

@@ -39,7 +39,7 @@ RelPermVanGenuchten::RelPermVanGenuchten(
 PropertyDataType RelPermVanGenuchten::value(
     VariableArray const& variable_array,
     ParameterLib::SpatialPosition const& /*pos*/, double const /*t*/,
-    double const /*dt*/) const
+    double const /*dt*/, State* const /*state*/) const
 {
     double const S_L = std::clamp(
         std::get<double>(

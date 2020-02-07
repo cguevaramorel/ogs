@@ -1,4 +1,5 @@
 /**
+/**
  * \file
  *
  * \copyright
@@ -24,7 +25,7 @@ LinearProperty::LinearProperty(PropertyDataType const& property_reference_value,
 PropertyDataType LinearProperty::value(
     VariableArray const& variable_array,
     ParameterLib::SpatialPosition const& /*pos*/, double const /*t*/,
-    double const /*dt*/) const
+    double const /*dt*/, State* const /*state*/) const
 {
     auto calculate_linearized_ratio = [&variable_array](
                                           double const initial_linearized_ratio,

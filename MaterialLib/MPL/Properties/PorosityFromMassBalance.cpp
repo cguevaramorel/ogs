@@ -16,6 +16,16 @@
 
 namespace MaterialPropertyLib
 {
+struct PorosityFromMassBalanceState final : public State
+{
+    double porosity;
+};
+
+std::unique_ptr<State> PorosityFromMassBalance::createState()
+{
+    return std::unique_ptr<PorosityFromMassBalanceState>();
+}
+
 void PorosityFromMassBalance::setScale(
     std::variant<Medium*, Phase*, Component*> scale_pointer)
 {
@@ -40,9 +50,11 @@ void PorosityFromMassBalance::setScale(
 
 PropertyDataType PorosityFromMassBalance::value(
     VariableArray const& variable_array,
-    ParameterLib::SpatialPosition const& pos,
-    double const t, double const dt) const
+    ParameterLib::SpatialPosition const& pos, double const t, double const dt,
+    State* const state) const
 {
+    auto const& s = *static_cast<PorosityFromMassBalanceState* const>(state);
+
     double const K_SR = _phase->property(PropertyType::bulk_modulus)
                             .template value<double>(variable_array, pos, t, dt);
     auto const alpha_b =

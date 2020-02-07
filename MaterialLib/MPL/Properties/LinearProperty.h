@@ -38,7 +38,8 @@ public:
     PropertyDataType value(VariableArray const& variable_array,
                            ParameterLib::SpatialPosition const& /*pos*/,
                            double const /*t*/,
-                           double const /*dt*/) const override;
+                           double const /*dt*/,
+                           State* const state) const override;
 
     /// This method will compute the derivative of a property with respect to
     /// the given primary variable.

@@ -40,6 +40,8 @@ public:
     {
     }
 
+    std::unique_ptr<State> createState() override;
+
     void setScale(
         std::variant<Medium*, Phase*, Component*> scale_pointer) override;
 
@@ -51,7 +53,8 @@ public:
 
     PropertyDataType value(VariableArray const& variable_array,
                            ParameterLib::SpatialPosition const& pos,
-                           double const t, double const dt) const override;
+                           double const t, double const dt,
+                           State* state = nullptr) const override;
     PropertyDataType dValue(VariableArray const& variable_array,
                             Variable const variable,
                             ParameterLib::SpatialPosition const& pos,

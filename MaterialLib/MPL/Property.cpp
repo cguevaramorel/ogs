@@ -74,7 +74,8 @@ PropertyDataType Property::value() const
 /// without altering it.
 PropertyDataType Property::value(VariableArray const& /*variable_array*/,
                                  ParameterLib::SpatialPosition const& /*pos*/,
-                                 double const /*t*/, double const /*dt*/) const
+                                 double const /*t*/, double const /*dt*/,
+                                 State* const /*state*/) const
 {
     return _value;
 }

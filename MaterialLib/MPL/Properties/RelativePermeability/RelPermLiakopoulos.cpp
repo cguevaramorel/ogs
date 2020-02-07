@@ -24,8 +24,8 @@ namespace MaterialPropertyLib
  */
 PropertyDataType RelPermLiakopoulos::value(
     VariableArray const& variable_array,
-    ParameterLib::SpatialPosition const& pos, double const t,
-    double const dt) const
+    ParameterLib::SpatialPosition const& pos, double const t, double const dt,
+    State* const /*state*/) const
 {
     /// here, an extra computation of saturation is forced, guaranteeing a
     /// correct value. In order to speed up the computing time, saturation could

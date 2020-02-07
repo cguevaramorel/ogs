@@ -38,7 +38,8 @@ public:
     /// exponentialy on the value of the given primary variable \f$\beta\f$.
     PropertyDataType value(VariableArray const& variable_array,
                            ParameterLib::SpatialPosition const& pos,
-                           double const t, double const dt) const override;
+                           double const t, double const dt,
+                           State* const state = nullptr) const override;
     /// This method will compute the derivative of a property with respect
     /// to the given primary variable.
     PropertyDataType dValue(VariableArray const& variable_array,

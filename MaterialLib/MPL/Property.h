@@ -18,6 +18,7 @@
 
 #include "ParameterLib/SpatialPosition.h"
 #include "PropertyType.h"
+#include "State.h"
 #include "VariableType.h"
 
 namespace MaterialPropertyLib
@@ -57,7 +58,8 @@ public:
     /// variables that are passed as arguments.
     virtual PropertyDataType value(VariableArray const& variable_array,
                                    ParameterLib::SpatialPosition const& pos,
-                                   double const t, double const dt) const;
+                                   double const t, double const dt,
+                                   State* = nullptr) const;
     /// This virtual method will compute the derivative of a property
     /// with respect to the given variable pv.
     virtual PropertyDataType dValue(VariableArray const& variable_array,
@@ -71,6 +73,9 @@ public:
                                      Variable const variable2,
                                      ParameterLib::SpatialPosition const& pos,
                                      double const t, double const dt) const;
+
+    virtual std::unique_ptr<State> createState() { return nullptr; }
+
     virtual void setScale(
         std::variant<Medium*, Phase*, Component*> /*scale_pointer*/){};
 
@@ -90,9 +95,9 @@ public:
     template <typename T>
     T value(VariableArray const& variable_array,
             ParameterLib::SpatialPosition const& pos, double const t,
-            double const dt) const
+            double const dt, State* const state = nullptr) const
     {
-        return std::get<T>(value(variable_array, pos, t, dt));
+        return std::get<T>(value(variable_array, pos, t, dt, state));
     }
 
     template <typename T>

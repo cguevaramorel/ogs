@@ -57,7 +57,7 @@ template <int DisplacementDim>
 PropertyDataType PermeabilityOrthotropicPowerLaw<DisplacementDim>::value(
     VariableArray const& variable_array,
     ParameterLib::SpatialPosition const& pos, double const /*t*/,
-    double const /*dt*/) const
+    double const /*dt*/, State* const /*state*/) const
 {
     auto const phi = std::get<double>(
         variable_array[static_cast<int>(Variable::transport_porosity)]);
