@@ -74,7 +74,7 @@ public:
                                      ParameterLib::SpatialPosition const& pos,
                                      double const t, double const dt) const;
 
-    virtual std::unique_ptr<State> createState() { return nullptr; }
+    virtual std::unique_ptr<State> createState() const { return nullptr; }
 
     virtual void setScale(
         std::variant<Medium*, Phase*, Component*> /*scale_pointer*/){};

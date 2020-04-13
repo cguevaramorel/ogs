@@ -40,7 +40,7 @@ public:
     {
     }
 
-    std::unique_ptr<State> createState() override;
+    std::unique_ptr<State> createState() const override;
 
     void setScale(
         std::variant<Medium*, Phase*, Component*> scale_pointer) override;

@@ -1,5 +1,4 @@
 /**
-/**
  * \file
  * \author Norbert Grunwald
  * \date   02.07.2018

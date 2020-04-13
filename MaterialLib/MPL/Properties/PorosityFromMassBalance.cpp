@@ -21,7 +21,7 @@ struct PorosityFromMassBalanceState final : public State
     double porosity;
 };
 
-std::unique_ptr<State> PorosityFromMassBalance::createState()
+std::unique_ptr<State> PorosityFromMassBalance::createState() const
 {
     return std::unique_ptr<PorosityFromMassBalanceState>();
 }

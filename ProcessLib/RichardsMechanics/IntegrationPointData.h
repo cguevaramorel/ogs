@@ -30,8 +30,8 @@ struct IntegrationPointData final
                                   MaterialPropertyLib::Property const& porosity)
         : solid_material(solid_material),
           material_state_variables(
-              solid_material.createMaterialStateVariables())
-              porosity_state(porosity.createState())
+              solid_material.createMaterialStateVariables()),
+          porosity_state(porosity.createState())
     {
         // Initialize current time step values
         static const int kelvin_vector_size =
