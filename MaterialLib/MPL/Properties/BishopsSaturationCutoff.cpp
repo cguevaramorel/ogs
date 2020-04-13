@@ -31,7 +31,7 @@ void BishopsSaturationCutoff::setScale(
 PropertyDataType BishopsSaturationCutoff::value(
     VariableArray const& variable_array,
     ParameterLib::SpatialPosition const& /*pos*/, double const /*t*/,
-    double const /*dt*/) const
+    double const /*dt*/, State* const /*state*/) const
 {
     auto const S_L = std::get<double>(
         variable_array[static_cast<int>(Variable::liquid_saturation)]);

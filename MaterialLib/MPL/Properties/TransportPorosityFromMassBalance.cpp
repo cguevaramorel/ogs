@@ -41,7 +41,7 @@ void TransportPorosityFromMassBalance::setScale(
 PropertyDataType TransportPorosityFromMassBalance::value(
     VariableArray const& variable_array,
     ParameterLib::SpatialPosition const& pos, double const t,
-    double const dt) const
+    double const dt, State* const /*state*/) const
 {
     double const K_SR = _phase->property(PropertyType::bulk_modulus)
                             .template value<double>(variable_array, pos, t, dt);

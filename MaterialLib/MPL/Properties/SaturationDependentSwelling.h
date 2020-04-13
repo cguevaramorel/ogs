@@ -57,7 +57,8 @@ public:
 
     PropertyDataType value(VariableArray const& variable_array,
                            ParameterLib::SpatialPosition const& pos,
-                           double const t, double const dt) const override;
+                           double const t, double const dt,
+                           State* const state = nullptr) const override;
     PropertyDataType dValue(VariableArray const& variable_array,
                             Variable const variable,
                             ParameterLib::SpatialPosition const& pos,

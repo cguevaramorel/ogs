@@ -27,7 +27,7 @@ public:
     PropertyDataType value(
         MaterialPropertyLib::VariableArray const& variable_array,
         ParameterLib::SpatialPosition const& pos, double const t,
-        double const dt) const override;
+        double const dt, State* const state = nullptr) const override;
 
 private:
     ParameterLib::Parameter<double> const& _parameter;

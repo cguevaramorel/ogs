@@ -21,7 +21,7 @@ DupuitPermeability::DupuitPermeability(
 PropertyDataType DupuitPermeability::value(
     MaterialPropertyLib::VariableArray const& variable_array,
     ParameterLib::SpatialPosition const& pos, double const t,
-    double const /*dt*/) const
+    double const /*dt*/, State* const /*state*/) const
 {
     double const pressure = std::get<double>(variable_array[static_cast<int>(
         MaterialPropertyLib::Variable::phase_pressure)]);
