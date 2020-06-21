@@ -16,9 +16,7 @@ PropertyVector<T>* Properties::createNewPropertyVector(
     MeshItemType mesh_item_type,
     std::size_t n_components)
 {
-    std::map<std::string, PropertyVectorBase*>::const_iterator it(
-        _properties.find(name)
-    );
+    auto const it = _properties.find(name);
     if (it != _properties.end()) {
         ERR("A property of the name '{:s}' is already assigned to the mesh.",
             name);
@@ -31,7 +29,7 @@ PropertyVector<T>* Properties::createNewPropertyVector(
             )
         )
     );
-    return static_cast<PropertyVector<T>*>((entry_info.first)->second);
+    return static_cast<PropertyVector<T>*>(entry_info->second);
 }
 
 template <typename T>
@@ -43,9 +41,7 @@ PropertyVector<T>* Properties::createNewPropertyVector(
     std::size_t n_components)
 {
     // check if there is already a PropertyVector with the same name
-    std::map<std::string, PropertyVectorBase*>::const_iterator it(
-        _properties.find(name)
-    );
+    auto const it = _properties.find(name);
     if (it != _properties.end()) {
         ERR("A property of the name '{:s}' already assigned to the mesh.",
             name);
@@ -72,7 +68,7 @@ PropertyVector<T>* Properties::createNewPropertyVector(
             )
         )
     );
-    return static_cast<PropertyVector<T>*>((entry_info.first)->second);
+    return static_cast<PropertyVector<T>*>(entry_info->second);
 }
 
 template <typename T>

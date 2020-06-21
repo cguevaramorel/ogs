@@ -169,7 +169,7 @@ private:
 private:
     /// A mapping from property's name to the stored object of any type.
     /// See addProperty() and getProperty() documentation.
-    std::map<std::string, PropertyVectorBase*> _properties;
+    std::multimap<std::string, PropertyVectorBase*> _properties;
 }; // end class
 
 #include "Properties-impl.h"

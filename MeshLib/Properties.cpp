@@ -19,9 +19,7 @@ namespace MeshLib
 
 void Properties::removePropertyVector(std::string const& name)
 {
-    std::map<std::string, PropertyVectorBase*>::const_iterator it(
-        _properties.find(name)
-    );
+    auto const it = _properties.find(name);
     if (it == _properties.end()) {
         WARN("A property of the name '{:s}' does not exist.", name);
         return;
