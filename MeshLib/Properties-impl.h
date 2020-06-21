@@ -16,10 +16,11 @@ PropertyVector<T>* Properties::createNewPropertyVector(
     MeshItemType mesh_item_type,
     std::size_t n_components)
 {
-    auto const it = _properties.find(name);
-    if (it != _properties.end()) {
-        ERR("A property of the name '{:s}' is already assigned to the mesh.",
-            name);
+    if (hasPropertyVector(name, mesh_item_type))
+    {
+        ERR("A property of the name '{:s}' and mesh item type {} is already "
+            "assigned to the mesh.",
+            name, mesh_item_type);
         return nullptr;
     }
     auto entry_info(
@@ -40,11 +41,11 @@ PropertyVector<T>* Properties::createNewPropertyVector(
     MeshItemType mesh_item_type,
     std::size_t n_components)
 {
-    // check if there is already a PropertyVector with the same name
-    auto const it = _properties.find(name);
-    if (it != _properties.end()) {
-        ERR("A property of the name '{:s}' already assigned to the mesh.",
-            name);
+    if (hasPropertyVector(name, mesh_item_type))
+    {
+        ERR("A property of the name '{:s}' and mesh item type {} is already "
+            "assigned to the mesh.",
+            name, mesh_item_type);
         return nullptr;
     }
 
