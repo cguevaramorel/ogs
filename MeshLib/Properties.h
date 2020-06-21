@@ -82,11 +82,11 @@ public:
     PropertyVectorBase* findPropertyVector(
         std::string const& name, MeshItemType const mesh_item_type) const;
 
-    /// Checks if a property vector with given \c name and the given type
-    /// exists.
-    /// @param name name of the requested property vector
+    /// Checks if a property vector with given \c name, mesh item type, and
+    /// value type \c T exists.
     template <typename T>
-    bool existsPropertyVector(std::string const& name) const;
+    bool existsPropertyVector(std::string const& name,
+                              MeshItemType const mesh_item_type) const;
 
     /// Checks if a property vector with given type \c T, \c name, \c
     /// mesh_item_type, and \c number_of_components exists.

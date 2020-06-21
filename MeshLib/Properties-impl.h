@@ -73,16 +73,16 @@ PropertyVector<T>* Properties::createNewPropertyVector(
 }
 
 template <typename T>
-bool Properties::existsPropertyVector(std::string const& name) const
+bool Properties::existsPropertyVector(std::string const& name,
+                                      MeshItemType const mesh_item_type) const
 {
-    auto it(_properties.find(name));
-    // Check that a PropertyVector with the approriate name exists.
-    if (it == _properties.end())
+    auto const pv = findPropertyVector(name, mesh_item_type);
+    if (pv == nullptr)
     {
         return false;
     }
     // Check that the PropertyVector has the correct data type.
-    return dynamic_cast<PropertyVector<T> const*>(it->second) != nullptr;
+    return dynamic_cast<PropertyVector<T> const*>(pv) != nullptr;
 }
 
 template <typename T>
@@ -90,26 +90,17 @@ bool Properties::existsPropertyVector(std::string const& name,
                                       MeshItemType const mesh_item_type,
                                       int const number_of_components) const
 {
-    auto const it = _properties.find(name);
-    if (it == _properties.end())
+    auto const pv = findPropertyVector(name, mesh_item_type);
+    if (pv == nullptr)
+    {
+        return false;
+    }
+    if (pv->getNumberOfComponents() != number_of_components)
     {
         return false;
     }
 
-    auto property = dynamic_cast<PropertyVector<T>*>(it->second);
-    if (property == nullptr)
-    {
-        return false;
-    }
-    if (property->getMeshItemType() != mesh_item_type)
-    {
-        return false;
-    }
-    if (property->getNumberOfComponents() != number_of_components)
-    {
-        return false;
-    }
-    return true;
+    return dynamic_cast<PropertyVector<T>*>(pv) != nullptr;
 }
 
 template <typename T>
