@@ -138,7 +138,8 @@ TEST_F(MeshLibProperties, AddDoublePointerProperties)
     ASSERT_TRUE(mesh != nullptr);
     std::string const& prop_name("GroupProperty");
     // check if a property with the name is already assigned to the mesh
-    ASSERT_FALSE(mesh->getProperties().hasPropertyVector(prop_name));
+    ASSERT_FALSE(mesh->getProperties().hasPropertyVector(
+        prop_name, MeshLib::MeshItemType::Cell));
     // data needed for the property
     const std::size_t n_prop_val_groups(10);
     const std::size_t n_items(mesh_size*mesh_size*mesh_size);
@@ -179,7 +180,8 @@ TEST_F(MeshLibProperties, AddDoublePointerProperties)
     }
 
     // the mesh should have the property assigned to cells
-    ASSERT_TRUE(mesh->getProperties().hasPropertyVector(prop_name));
+    ASSERT_TRUE(mesh->getProperties().hasPropertyVector(
+        prop_name, MeshLib::MeshItemType::Cell));
     // fetch the properties from the container
     auto const* const group_properties_cpy =
         mesh->getProperties().getPropertyVector<double*>(prop_name);
@@ -271,7 +273,8 @@ TEST_F(MeshLibProperties, AddVariousDifferentProperties)
 
     std::string const& prop_name("GroupVectorProperty");
     // check if the property is already assigned to the mesh
-    ASSERT_FALSE(mesh->getProperties().hasPropertyVector(prop_name));
+    ASSERT_FALSE(mesh->getProperties().hasPropertyVector(
+        prop_name, MeshLib::MeshItemType::Cell));
     const std::size_t n_prop_val_groups(10);
     const std::size_t n_items(mesh_size*mesh_size*mesh_size);
     std::vector<std::size_t> prop_item2group_mapping(n_items);
@@ -302,7 +305,8 @@ TEST_F(MeshLibProperties, AddVariousDifferentProperties)
     }
 
     // the mesh should have the property assigned to cells
-    ASSERT_TRUE(mesh->getProperties().hasPropertyVector(prop_name));
+    ASSERT_TRUE(mesh->getProperties().hasPropertyVector(
+        prop_name, MeshLib::MeshItemType::Cell));
 
     // fetch the vector filled with property values from mesh
     auto const* const group_properties_cpy =
@@ -323,7 +327,8 @@ TEST_F(MeshLibProperties, AddVariousDifferentProperties)
     // *** add a 2nd property ***
     std::string const& prop_name_2("ItemwiseMatrixProperties");
     // check if the property is already assigned to the mesh
-    ASSERT_FALSE(mesh->getProperties().hasPropertyVector(prop_name_2));
+    ASSERT_FALSE(mesh->getProperties().hasPropertyVector(
+        prop_name_2, MeshLib::MeshItemType::Cell));
     const std::size_t n_items_2(mesh_size*mesh_size*mesh_size);
     auto* const array_properties =
         mesh->getProperties().createNewPropertyVector<std::array<float, 9>>(
@@ -342,7 +347,8 @@ TEST_F(MeshLibProperties, AddVariousDifferentProperties)
     EXPECT_EQ(9, (*array_properties)[0].size());
 
     // the mesh should have the property assigned to cells
-    ASSERT_TRUE(mesh->getProperties().hasPropertyVector(prop_name_2));
+    ASSERT_TRUE(mesh->getProperties().hasPropertyVector(
+        prop_name_2, MeshLib::MeshItemType::Cell));
 
     // fetch the vector in order to compare the content
     auto const* const array_properties_cpy =
@@ -360,7 +366,8 @@ TEST_F(MeshLibProperties, AddVariousDifferentProperties)
     // *** add a 3rd property ***
     std::string const& prop_name_3("ItemwiseEigenMatrixProperties");
     // check if the property is already assigned to the mesh
-    ASSERT_FALSE(mesh->getProperties().hasPropertyVector(prop_name_3));
+    ASSERT_FALSE(mesh->getProperties().hasPropertyVector(
+        prop_name_3, MeshLib::MeshItemType::Cell));
     auto* const matrix_properties =
         mesh->getProperties()
             .createNewPropertyVector<
@@ -379,7 +386,8 @@ TEST_F(MeshLibProperties, AddVariousDifferentProperties)
     }
 
     // the mesh should have the property assigned to cells
-    ASSERT_TRUE(mesh->getProperties().hasPropertyVector(prop_name_3));
+    ASSERT_TRUE(mesh->getProperties().hasPropertyVector(
+        prop_name_3, MeshLib::MeshItemType::Cell));
 
     // fetch the vector in order to compare the content
     auto const* const matrix_properties_cpy =
@@ -435,7 +443,8 @@ TEST_F(MeshLibProperties, CopyConstructor)
     // create a copy from the original Properties object
     MeshLib::Properties properties_copy(mesh->getProperties());
     // check if the Properties have a PropertyVector with the correct name
-    ASSERT_TRUE(properties_copy.hasPropertyVector(prop_name));
+    ASSERT_TRUE(properties_copy.hasPropertyVector(prop_name,
+                                                  MeshLib::MeshItemType::Cell));
     // fetch the PropertyVector from the copy of the Properties object
     auto const* const group_properties_cpy(
         properties_copy.getPropertyVector<double*>(prop_name));

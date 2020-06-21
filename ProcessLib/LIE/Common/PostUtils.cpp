@@ -55,9 +55,12 @@ PostProcessTool::PostProcessTool(
         vec_junction_nodeID_matIDs)
     : _org_mesh(org_mesh)
 {
-    if (!org_mesh.getProperties().hasPropertyVector("displacement") ||
-        !org_mesh.getProperties().hasPropertyVector("displacement_jump1") ||
-        !org_mesh.getProperties().hasPropertyVector("levelset1"))
+    if (!org_mesh.getProperties().hasPropertyVector(
+            "displacement", MeshLib::MeshItemType::Node) ||
+        !org_mesh.getProperties().hasPropertyVector(
+            "displacement_jump1", MeshLib::MeshItemType::Node) ||
+        !org_mesh.getProperties().hasPropertyVector(
+            "levelset1", MeshLib::MeshItemType::Node))
     {
         OGS_FATAL("The given mesh does not have relevant properties");
     }

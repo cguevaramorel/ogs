@@ -294,28 +294,55 @@ TEST_F(InSituMesh, DISABLED_MappedMeshSourceRoundtrip)
             // Both properties should be identical
             auto meshProperties = mesh->getProperties();
             auto newMeshProperties = newMesh->getProperties();
-            ASSERT_EQ(newMeshProperties.hasPropertyVector("PointDoubleProperty"),
-                meshProperties.hasPropertyVector("PointDoubleProperty"));
-            ASSERT_EQ(newMeshProperties.hasPropertyVector("PointIntProperty"),
-                      meshProperties.hasPropertyVector("PointIntProperty"));
-            ASSERT_EQ(newMeshProperties.hasPropertyVector("PointUnsignedProperty"),
-                meshProperties.hasPropertyVector("PointUnsignedProperty"));
-            ASSERT_EQ(newMeshProperties.hasPropertyVector("CellDoubleProperty"),
-                meshProperties.hasPropertyVector("CellDoubleProperty"));
-            ASSERT_EQ(newMeshProperties.hasPropertyVector("CellIntProperty"),
-                meshProperties.hasPropertyVector("CellIntProperty"));
-            ASSERT_EQ(newMeshProperties.hasPropertyVector("CellUnsignedProperty"),
-                meshProperties.hasPropertyVector("CellUnsignedProperty"));
+            ASSERT_EQ(newMeshProperties.hasPropertyVector(
+                          "PointDoubleProperty", MeshLib::MeshItemType::Node),
+                      meshProperties.hasPropertyVector(
+                          "PointDoubleProperty", MeshLib::MeshItemType::Node));
+            ASSERT_EQ(newMeshProperties.hasPropertyVector(
+                          "PointIntProperty", MeshLib::MeshItemType::Node),
+                      meshProperties.hasPropertyVector(
+                          "PointIntProperty", MeshLib::MeshItemType::Node));
+            ASSERT_EQ(
+                newMeshProperties.hasPropertyVector(
+                    "PointUnsignedProperty", MeshLib::MeshItemType::Node),
+                meshProperties.hasPropertyVector("PointUnsignedProperty",
+                                                 MeshLib::MeshItemType::Node));
+            ASSERT_EQ(newMeshProperties.hasPropertyVector(
+                          "CellDoubleProperty", MeshLib::MeshItemType::Cell),
+                      meshProperties.hasPropertyVector(
+                          "CellDoubleProperty", MeshLib::MeshItemType::Cell));
+            ASSERT_EQ(newMeshProperties.hasPropertyVector(
+                          "CellIntProperty", MeshLib::MeshItemType::Cell),
+                      meshProperties.hasPropertyVector(
+                          "CellIntProperty", MeshLib::MeshItemType::Cell));
+            ASSERT_EQ(newMeshProperties.hasPropertyVector(
+                          "CellUnsignedProperty", MeshLib::MeshItemType::Cell),
+                      meshProperties.hasPropertyVector(
+                          "CellUnsignedProperty", MeshLib::MeshItemType::Cell));
 
-            ASSERT_EQ(newMeshProperties.hasPropertyVector("FieldDoubleProperty"),
-                meshProperties.hasPropertyVector("FieldDoubleProperty"));
-            ASSERT_EQ(newMeshProperties.hasPropertyVector("FieldIntProperty"),
-                meshProperties.hasPropertyVector("FieldIntProperty"));
-            ASSERT_EQ(newMeshProperties.hasPropertyVector("FieldUnsignedProperty"),
-                meshProperties.hasPropertyVector("FieldUnsignedProperty"));
+            ASSERT_EQ(newMeshProperties.hasPropertyVector(
+                          "FieldDoubleProperty",
+                          MeshLib::MeshItemType::IntegrationPoint),
+                      meshProperties.hasPropertyVector(
+                          "FieldDoubleProperty",
+                          MeshLib::MeshItemType::IntegrationPoint));
+            ASSERT_EQ(newMeshProperties.hasPropertyVector(
+                          "FieldIntProperty",
+                          MeshLib::MeshItemType::IntegrationPoint),
+                      meshProperties.hasPropertyVector(
+                          "FieldIntProperty",
+                          MeshLib::MeshItemType::IntegrationPoint));
+            ASSERT_EQ(newMeshProperties.hasPropertyVector(
+                          "FieldUnsignedProperty",
+                          MeshLib::MeshItemType::IntegrationPoint),
+                      meshProperties.hasPropertyVector(
+                          "FieldUnsignedProperty",
+                          MeshLib::MeshItemType::IntegrationPoint));
 
-            ASSERT_EQ(newMeshProperties.hasPropertyVector("MaterialIDs"),
-                meshProperties.hasPropertyVector("MaterialIDs"));
+            ASSERT_EQ(newMeshProperties.hasPropertyVector(
+                          "MaterialIDs", MeshLib::MeshItemType::Cell),
+                      meshProperties.hasPropertyVector(
+                          "MaterialIDs", MeshLib::MeshItemType::Cell));
 
             // Check some properties on equality
             auto const* const doubleProps =
