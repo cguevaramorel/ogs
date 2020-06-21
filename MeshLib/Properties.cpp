@@ -28,9 +28,22 @@ void Properties::removePropertyVector(std::string const& name)
     _properties.erase(it);
 }
 
-bool Properties::hasPropertyVector(std::string const& name) const
+PropertyVectorBase* Properties::findPropertyVector(
+    std::string const& name, MeshItemType const mesh_item_type) const
 {
-    return _properties.find(name) != _properties.end();
+    auto const it = _properties.find(name);
+    if ((it != _properties.end()) &&
+        (it->second->getMeshItemType() == mesh_item_type))
+    {
+        return it->second;
+    }
+    return nullptr;
+}
+
+bool Properties::hasPropertyVector(std::string const& name,
+                                   MeshItemType const mesh_item_type) const
+{
+    return findPropertyVector(name, mesh_item_type) != nullptr;
 }
 
 std::string Properties::getUniquePropertyName(

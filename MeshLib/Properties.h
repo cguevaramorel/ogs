@@ -77,6 +77,11 @@ public:
         MeshItemType mesh_item_type,
         std::size_t n_components = 1);
 
+    /// Looks for a property vector with given name and mesh item type, and
+    /// returns it, or a nullptr if such property vector was not found.
+    PropertyVectorBase* findPropertyVector(
+        std::string const& name, MeshItemType const mesh_item_type) const;
+
     /// Checks if a property vector with given \c name and the given type
     /// exists.
     /// @param name name of the requested property vector
@@ -118,10 +123,10 @@ public:
 
     void removePropertyVector(std::string const& name);
 
-    /// Check if a PropertyVector accessible by the name is already
-    /// stored within the Properties object.
-    /// @param name the name of the property (for instance porosity)
-    bool hasPropertyVector(std::string const& name) const;
+    /// Check if a PropertyVector accessible by the name and mesh item type is
+    /// already stored within the Properties object.
+    bool hasPropertyVector(std::string const& name,
+                           MeshItemType const mesh_item_type) const;
 
     /// Returns a unique property name for the given mesh item type and starting
     /// with given prefix.
