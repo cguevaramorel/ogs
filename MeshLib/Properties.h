@@ -121,7 +121,8 @@ public:
                                          MeshItemType const item_type,
                                          int const n_components);
 
-    void removePropertyVector(std::string const& name);
+    void removePropertyVector(std::string const& name,
+                              MeshItemType const mesh_item_type);
 
     /// Check if a PropertyVector accessible by the name and mesh item type is
     /// already stored within the Properties object.

@@ -129,7 +129,8 @@ TEST_F(MeshLibProperties, AddDoubleProperties)
         ASSERT_EQ((*double_properties)[k], (*double_properties_cpy)[k]);
     }
 
-    mesh->getProperties().removePropertyVector(prop_name);
+    mesh->getProperties().removePropertyVector(prop_name,
+                                               MeshLib::MeshItemType::Cell);
     ASSERT_FALSE(mesh->getProperties().existsPropertyVector<double>(prop_name));
 }
 
@@ -191,7 +192,8 @@ TEST_F(MeshLibProperties, AddDoublePointerProperties)
         ASSERT_EQ((*group_properties)[k], (*group_properties_cpy)[k]);
     }
 
-    mesh->getProperties().removePropertyVector(prop_name);
+    mesh->getProperties().removePropertyVector(prop_name,
+                                               MeshLib::MeshItemType::Cell);
     ASSERT_FALSE(
         mesh->getProperties().existsPropertyVector<double*>(prop_name));
 }
@@ -260,7 +262,8 @@ TEST_F(MeshLibProperties, AddArrayPointerProperties)
             (*((*group_properties_cpy)[k]))[2]);
     }
 
-    mesh->getProperties().removePropertyVector(prop_name);
+    mesh->getProperties().removePropertyVector(prop_name,
+                                               MeshLib::MeshItemType::Cell);
     auto exists =
         mesh->getProperties().existsPropertyVector<std::array<double, 3>*>(
             prop_name);

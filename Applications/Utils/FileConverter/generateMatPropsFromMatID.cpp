@@ -85,7 +85,8 @@ int main (int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    mesh->getProperties().removePropertyVector("MaterialIDs");
+    mesh->getProperties().removePropertyVector("MaterialIDs",
+                                               MeshLib::MeshItemType::Cell);
 
     std::string const new_mshname(name + "_new.vtu");
     INFO("Writing mesh to file '{:s}'.", new_mshname);

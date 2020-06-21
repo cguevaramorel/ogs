@@ -253,7 +253,8 @@ MeshLib::Mesh* RasterToMesh::convert(
 
     if (intensity_type == UseIntensityAs::NONE)
     {
-        new_mesh->getProperties().removePropertyVector(array_name);
+        new_mesh->getProperties().removePropertyVector(
+            array_name, MeshLib::MeshItemType::Cell);
     }
 
     return new_mesh;

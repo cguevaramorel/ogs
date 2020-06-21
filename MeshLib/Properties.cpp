@@ -16,12 +16,17 @@
 
 namespace MeshLib
 {
-
-void Properties::removePropertyVector(std::string const& name)
+void Properties::removePropertyVector(std::string const& name,
+                                      MeshItemType const mesh_item_type)
 {
     auto const it = _properties.find(name);
-    if (it == _properties.end()) {
-        WARN("A property of the name '{:s}' does not exist.", name);
+    if ((it != _properties.end()) &&
+        (it->second->getMeshItemType() == mesh_item_type))
+    {
+        WARN(
+            "A property of the name '{:s}' for mesh item type {} does not "
+            "exist.",
+            name, mesh_item_type);
         return;
     }
     delete it->second;
