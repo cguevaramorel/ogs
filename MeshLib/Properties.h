@@ -82,6 +82,40 @@ public:
     PropertyVectorBase* findPropertyVector(
         std::string const& name, MeshItemType const mesh_item_type) const;
 
+    /// Looks for a property vector with given name, mesh item type, and value
+    /// type \c T and returns it, or a nullptr if such property vector was not
+    /// found.
+    template <typename T>
+    PropertyVector<T>* findPropertyVector(std::string const& property_name,
+                                          MeshItemType const mesh_item_type);
+
+    /// Looks for a property vector with given name, mesh item type, number of
+    /// components, and value type \c T and returns it, or a nullptr if such
+    /// property vector was not found.
+    template <typename T>
+    PropertyVector<T>* findPropertyVector(std::string const& property_name,
+                                          MeshItemType const mesh_item_type,
+                                          int const number_of_components);
+
+    /// Looks for a property vector with given name, mesh item type, and value
+    /// type \c T and returns it, or a nullptr if such property vector was not
+    /// found.
+    /// Const version.
+    template <typename T>
+    PropertyVector<T> const* findPropertyVector(
+        std::string const& property_name,
+        MeshItemType const mesh_item_type) const;
+
+    /// Looks for a property vector with given name, mesh item type, number of
+    /// components, and value type \c T and returns it, or a nullptr if such
+    /// property vector was not found.
+    /// Const version.
+    template <typename T>
+    PropertyVector<T> const* findPropertyVector(
+        std::string const& property_name,
+        MeshItemType const mesh_item_type,
+        int const number_of_components) const;
+
     /// Checks if a property vector with given \c name, mesh item type, and
     /// value type \c T exists.
     template <typename T>
@@ -95,31 +129,36 @@ public:
                               MeshItemType const mesh_item_type,
                               int const number_of_components) const;
 
-    /// Returns a property vector with given \c name or aborts calling OGS_FATAL
-    /// if no such property vector exists.
+    /// Returns a property vector with given \c name and mesh item type or
+    /// aborts calling OGS_FATAL if no such property vector exists.
     template <typename T>
-    PropertyVector<T> const* getPropertyVector(std::string const& name) const;
+    PropertyVector<T>& getPropertyVector(std::string const& name,
+                                         MeshItemType const mesh_item_type);
 
-    /// Returns a property vector with given \c name or aborts calling OGS_FATAL
-    /// if no such property vector exists.
+    /// Returns a property vector with given \c name, \c mesh_item_type and \c
+    /// number_of_components or calls OGS_FATAL if no such property vector
+    /// exists.
     template <typename T>
-    PropertyVector<T>* getPropertyVector(std::string const& name);
+    PropertyVector<T>& getPropertyVector(std::string const& name,
+                                         MeshItemType const mesh_item_type,
+                                         int const n_components);
 
-    /// Returns a property vector with given \c name, \c item_type and \c
+    /// Returns a property vector with given \c name and mesh item type or
+    /// aborts calling OGS_FATAL if no such property vector exists.
+    /// Const version.
+    template <typename T>
+    PropertyVector<T> const& getPropertyVector(
+        std::string const& name, MeshItemType const mesh_item_type) const;
+
+    /// Returns a property vector with given \c name, \c mesh_item_type and \c
     /// number_of_components or aborts calling OGS_FATAL if no such property
     /// vector exists.
+    /// Const version.
     template <typename T>
-    PropertyVector<T> const* getPropertyVector(std::string const& name,
-                                               MeshItemType const item_type,
-                                               int const n_components) const;
-
-    /// Non-const version of getPropertyVector returns a property vector with
-    /// given \c name, \c item_type and \c number_of_components or calls
-    /// OGS_FATAL if no such property vector exists.
-    template <typename T>
-    PropertyVector<T>* getPropertyVector(std::string const& name,
-                                         MeshItemType const item_type,
-                                         int const n_components);
+    PropertyVector<T> const& getPropertyVector(
+        std::string const& name,
+        MeshItemType const mesh_item_type,
+        int const n_components) const;
 
     void removePropertyVector(std::string const& name,
                               MeshItemType const mesh_item_type);
