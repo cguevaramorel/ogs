@@ -11,6 +11,7 @@
 
 #include <cassert>
 #include <iterator>
+#include <optional>
 #include <ostream>
 #include <string>
 #include <utility>
@@ -284,5 +285,22 @@ private:
     // hide method
     T* at(std::size_t);
 };
+
+/// Returns the smallest and largest value of a scalar array with the given
+/// name.
+template <typename T>
+std::optional<std::pair<T, T>> propertyVectorRange(
+    PropertyVector<T> const& property)
+{
+    if (property.empty())
+    {
+        INFO("Mesh property vector '{:s}' is empty.",
+             property.getPropertyName());
+        return std::nullopt;
+    }
+
+    auto const [min, max] = std::minmax_element(begin(property), end(property));
+    return {{*min, *max}};
+}
 
 }  // end namespace MeshLib

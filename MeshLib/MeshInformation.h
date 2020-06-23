@@ -17,7 +17,6 @@
 #include <array>
 #include <limits>
 #include <map>
-#include <optional>
 #include <string>
 
 #include "GeoLib/AABB.h"
@@ -33,24 +32,6 @@ namespace MeshLib
 class MeshInformation
 {
 public:
-    /// Returns the smallest and largest value of a scalar array with the given
-    /// name.
-    template <typename T>
-    static std::optional<std::pair<T, T>> const getValueBounds(
-        PropertyVector<T> const& property)
-    {
-        if (property.empty())
-        {
-            INFO("Mesh property vector '{:s}' is empty.",
-                 property.getPropertyName());
-            return std::nullopt;
-        }
-
-        auto const [min, max] =
-            std::minmax_element(begin(property), end(property));
-        return {{*min, *max}};
-    }
-
     /// Returns the bounding box of the mesh.
     static GeoLib::AABB getBoundingBox(const MeshLib::Mesh& mesh);
 
