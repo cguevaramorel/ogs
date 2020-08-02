@@ -123,9 +123,12 @@ public:
     /// @param name the name of the property (for instance porosity)
     bool hasPropertyVector(std::string const& name) const;
 
-    std::vector<std::string> getPropertyVectorNames() const;
-    std::vector<std::string> getPropertyVectorNames(
-        MeshLib::MeshItemType t) const;
+    /// Returns a unique property name for the given mesh item type and starting
+    /// with given prefix.
+    /// \see BaseLib::getUniqueName for details on how the new name will be
+    /// generated.
+    std::string getUniquePropertyName(std::string const& name_prefix,
+                                      MeshItemType const mesh_item_type) const;
 
     /** copy all PropertyVector objects stored in the (internal) map but only
      * those nodes/elements of a PropertyVector whose ids are not in the vectors
@@ -158,6 +161,10 @@ public:
     // Counts properties of given mesh item type.
     std::map<std::string, PropertyVectorBase*>::size_type size(
         MeshItemType const mesh_item_type) const;
+
+private:
+    std::vector<std::string> getPropertyVectorNames(
+        MeshLib::MeshItemType t) const;
 
 private:
     /// A mapping from property's name to the stored object of any type.

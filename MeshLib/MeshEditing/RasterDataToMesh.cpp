@@ -10,7 +10,6 @@
 
 #include "RasterDataToMesh.h"
 
-#include "BaseLib/StringTools.h"
 #include "MeshLib/Node.h"
 #include "MeshLib/Elements/Element.h"
 
@@ -51,7 +50,7 @@ bool projectToNodes(MeshLib::Mesh& mesh, GeoLib::Raster const& raster,
     auto& nodes = mesh.getNodes();
     auto& props = mesh.getProperties();
     std::string const name =
-        BaseLib::getUniqueName(props.getPropertyVectorNames(), array_name);
+        props.getUniquePropertyName(array_name, MeshLib::MeshItemType::Node);
     auto vec = props.createNewPropertyVector<double>(
         name, MeshLib::MeshItemType::Node, 1);
     double const no_data = raster.getHeader().no_data;
@@ -75,7 +74,7 @@ bool projectToElements(MeshLib::Mesh& mesh, GeoLib::Raster const& raster,
     auto& elems = mesh.getElements();
     auto& props = mesh.getProperties();
     std::string const name =
-        BaseLib::getUniqueName(props.getPropertyVectorNames(), array_name);
+        props.getUniquePropertyName(array_name, MeshLib::MeshItemType::Cell);
     auto vec = props.createNewPropertyVector<double>(
         name, MeshLib::MeshItemType::Cell, 1);
     double const no_data = raster.getHeader().no_data;

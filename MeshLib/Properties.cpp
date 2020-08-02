@@ -12,6 +12,8 @@
 
 #include "Properties.h"
 
+#include "BaseLib/StringTools.h"
+
 namespace MeshLib
 {
 
@@ -33,13 +35,11 @@ bool Properties::hasPropertyVector(std::string const& name) const
     return _properties.find(name) != _properties.end();
 }
 
-std::vector<std::string> Properties::getPropertyVectorNames() const
+std::string Properties::getUniquePropertyName(
+    std::string const& name_prefix, MeshItemType const mesh_item_type) const
 {
-    std::vector<std::string> names;
-    std::transform(_properties.begin(), _properties.end(),
-                   std::back_inserter(names),
-                   [](auto const& pair) { return pair.first; });
-    return names;
+    return BaseLib::getUniqueName(getPropertyVectorNames(mesh_item_type),
+                                  name_prefix);
 }
 
 std::vector<std::string> Properties::getPropertyVectorNames(
