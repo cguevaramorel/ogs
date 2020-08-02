@@ -721,10 +721,7 @@ void TetGenInterface::write2dElements(std::ofstream &out,
     out << nTotalTriangles << " 1\n";
 
     const std::vector<MeshLib::Element*> &elements = mesh.getElements();
-    MeshLib::PropertyVector<int> const*const mat_ids =
-        mesh.getProperties().existsPropertyVector<int>("MaterialIDs")
-            ? mesh.getProperties().getPropertyVector<int>("MaterialIDs")
-            : nullptr;
+    MeshLib::PropertyVector<int> const* const mat_ids = materialIds(mesh);
     const std::size_t nElements (elements.size());
     unsigned element_count(0);
     for (std::size_t i=0; i<nElements; ++i)
